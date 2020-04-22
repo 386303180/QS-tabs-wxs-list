@@ -1,5 +1,7 @@
+var leftNum = 3, widthNum = 4;
+
 function log(t) {
-	// log(t);
+	// console.log(t);
 }
 
 function transition(e, ins) {
@@ -10,24 +12,25 @@ function transition(e, ins) {
 	var windowwidth = parseFloat(dataset.windowwidth);
 	log('dataset:' + JSON.stringify(dataset));
 	var tabsinfo = dataset.tabsinfo || [];
-	tabsinfo = str2Obj(tabsinfo);
+	tabsinfo = str2Obj(tabsinfo, '|');
 	var current = parseInt(dataset.current) || 0;
 	log('current:' + current);
 	var tab = tabsinfo[current];
-	tab = str2Obj(tab);
+	tab = str2Obj(tab, ',');
 	if(tab) {
 		log('tab:' + JSON.stringify(tab));
-		var curTabDx = (parseFloat(tab.left) + (parseFloat(tab.width)/2));
+		var curTabDx = (parseFloat(tab[leftNum]) + (parseFloat(tab[widthNum])/2));
 		log('curTabDx:' + curTabDx);
 		var newDx = e.detail.dx;
 		var nextCurrent = newDx>0?current+1:current-1;
 		log('nextCurrent:' + nextCurrent);
 		
 		var nextTab = tabsinfo[nextCurrent];
-		nextTab = str2Obj(nextTab);
+		nextTab = str2Obj(nextTab, ',');
+		log('nextTab:' + JSON.stringify(nextTab));
 		var nextDx;
 		if(nextTab) {
-			nextDx = nextTab.left + nextTab.width/2;
+			nextDx = parseFloat(nextTab[leftNum]) + parseFloat(nextTab[widthNum])/2;
 		}else{
 			nextDx = newDx>0?(curTabDx + 200): (curTabDx - 200);
 		}
@@ -43,7 +46,7 @@ function transition(e, ins) {
 		var lineWidth = dataset.linewidth;
 		lineWidth = parseFloat(lineWidth);
 		log('lineWidth:' +lineWidth);
-		lineWidth = lineWidth>1?lineWidth:tab.width*lineWidth;
+		lineWidth = lineWidth>1?lineWidth:parseFloat(tab[widthNum])*lineWidth;
 		var setDx = (moveDx - lineWidth/2);
 		line.setStyle({
 			'transform': 'translateX(' + setDx + 'px)'
@@ -84,23 +87,23 @@ function setCurDx(ins, current, tabsChange, changeLineDx) {
 	log('dataset:' + JSON.stringify(dataset));
 	var line = ins.selectComponent('#line');
 	var tabsinfo = dataset.tabsinfo || [];
-	tabsinfo = str2Obj(tabsinfo);
+	tabsinfo = str2Obj(tabsinfo, '|');
 	var current = parseInt(current!==false?current:(dataset.current || 0));
 	var tab = tabsinfo[current];
-	tab = str2Obj(tab);
+	tab = str2Obj(tab, ',');
 	log('tab:' + JSON.stringify(tab));
 	if(tab) {
-		log('tab.left : ' + tab.left);
-		var lineDx = (parseFloat(tab.left) + parseFloat(tab.width)/2);
+		log('tab.left : ' + tab[leftNum]);
+		var lineDx = (parseFloat(tab[leftNum]) + parseFloat(tab[widthNum])/2);
 		log('lineDx:' + lineDx);
 		log('changeLineDx:' + changeLineDx);
 		log('current:' + current);
 		if(changeLineDx !== false || current == 0) {
 			var lineWidth = dataset.linewidth;
 			lineWidth = parseFloat(lineWidth);
-			log('tab.width:' + tab.width);
+			log('tab.width:' + tab[widthNum]);
 			log('lineWidth 1:' + lineWidth);
-			lineWidth = lineWidth>1?Math.abs(lineWidth):tab.width*lineWidth;
+			lineWidth = lineWidth>1?Math.abs(lineWidth):parseFloat(tab[widthNum])*lineWidth;
 			log('lineWidth 2:' + lineWidth);
 			ins.callMethod('setWxsLineWidth', lineWidth);
 			line.setStyle({
@@ -125,9 +128,10 @@ function setScrollLeft(ins, obj) {
 	return false;
 }
 
-function str2Obj(str) {
+function str2Obj(str, char) {
 	if(typeof str === 'string') {
-		return JSON.parse(str);
+		return str.replace('"', '').split(char);
+		// return eval(str);
 	}
 	return str;
 }

@@ -1,46 +1,59 @@
 <!-- 该组件需自行实现, 此处只是示例 -->
 <template>
-	<view class="container" :class="getFixedClass">
-		<scroll-view scroll-y class="scrollView" lower-threshold="200" :scroll-top="scrollTop" @scroll="scrollFn($event)"
-		 @scrolltolower="getList(false, false, false)">
-			<!-- 保证性能勿删 -->
-			<view class="scroll-container">
-				<!-- 保证性能勿删 -->
-				<block v-if="getShow">
-					
-					<!-- 自行实现页面样式展示 -->
-					<view class="scroll-item" v-for="(item, ind) in list" :key="ind" @tap="itemClick(ind)">
-						<image lazy-load class="scroll-item-image" src="http://imgsrc.baidu.com/forum/w%3D580/sign=f480662e3cadcbef01347e0e9cae2e0e/8f5b1cd8bc3eb13517d8e851ab1ea8d3fc1f4489.jpg"
-						 mode="aspectFill"></image>
-						<view class="scroll-item-text">
-							{{item}}
-						</view>
-					</view>
-					<!-- 列表状态展示 -->
-					<view class="statusText" @tap="getList(false, true, false)" :style="{
-						'color': getColor
-					}">
-						{{statusText.text || '数据未加载'}}
-					</view>
-					
-				</block>
+	<!-- 为性能缘故, 当tab项多时, 请尽量不要删除 v-if="show" -->
+	<view v-if="show">
+		<view class="scroll-item" v-for="(item, ind) in list" :key="ind" @tap="itemClick(ind)">
+			<image lazy-load class="scroll-item-image" src="http://imgsrc.baidu.com/forum/w%3D580/sign=f480662e3cadcbef01347e0e9cae2e0e/8f5b1cd8bc3eb13517d8e851ab1ea8d3fc1f4489.jpg"
+			 mode="aspectFill"></image>
+			<view class="scroll-item-text">
+				{{item}}
 			</view>
-		</scroll-view>
+		</view>
+		<!-- 列表状态展示 -->
+		<view class="statusText" @tap="getList(false, true, false)" :style="{
+			'color': getColor
+		}">
+			{{statusText.text || ''}}
+		</view>
 	</view>
 </template>
 
 <script>
-	// 组件必须
-	import { QSTabsWxsListMixin } from '../mixins/QS-tabs-wxs-list-mixin.js';
-	
 	import {
 		getTabList
 	} from '@/util/getTabList.js';
 	import {
 		doPageDemand
-	} from '../js/pageDemand.js';
+	} from '../../js/pageDemand.js';
 	export default {
-		mixins: [QSTabsWxsListMixin()],// 组件必须
+		props: {
+			tab: {
+				type: [Object, String],
+				default () {
+					return {}
+				}
+			},
+			index: {
+				type: [String, Number],
+				default: ''
+			},
+			current: {
+				type: [String, Number],
+				default: ''
+			},
+			type: {
+				type: String,
+				default: ''
+			},
+			show: {
+				type: [Boolean, String],
+				default: false
+			},
+			readyRefresh: {
+				type: [Boolean, String],
+				default: false
+			}
+		},
 		data() {
 			return {
 				list: [],
@@ -49,8 +62,7 @@
 					pageSize: 50,
 					tabId: this.tab.id
 				},
-				statusText: {},
-				refreshClear: false
+				statusText: {}
 			}
 		},
 		computed: {
@@ -76,7 +88,6 @@
 		},
 		methods: {
 			init(refresh) {	//若是用户触发下拉刷新则refresh为true
-				if (this.refreshClear) this.oldScrollTop = 0;
 				this.getList(refresh, false, false);
 			},
 			getList(refresh, doEvent, force) {
@@ -84,10 +95,11 @@
 				doPageDemand.call(this, {
 					getDataFn: getTabList, //获取数据的方法
 					success() {
-						if (refresh) _this.$emit('refreshEnd');
+						if (refresh) _this.$emit('refreshEnd', true);
 					},
 					fail() {
 						console.log('访问接口失败');
+						if (refresh) _this.$emit('refreshEnd', false);
 					}, //接口访问失败回调
 
 					sendDataName: 'sendData', //携带数据字段名称
@@ -110,7 +122,7 @@
 
 					noDataText: false, //访问接口后若数据长度为0则可自定义为空时文字
 
-					refreshClear: this.refreshClear, //刷新时是否清空数据
+					refreshClear: false, //刷新时是否清空数据
 				})
 			},
 			itemClick(ind) {
@@ -123,5 +135,41 @@
 </script>
 
 <style scoped>
-	@import url("../css/QS-tabs-wxs-list-components.css");
+	@import url("../../css/box-sizing-border-box.css");
+	.scroll-item {
+		width: 100%;
+		padding: 28rpx;
+		background-color: white;
+		border-radius: 8px;
+		display: flex;
+		flex-direction: row;
+		margin-bottom: 35rpx;
+	}
+	
+	.scroll-item-image {
+		background-color: #F8F8F8;
+		border-radius: 8px;
+		height: 220rpx;
+		width: 40%;
+	}
+	
+	.scroll-item-text {
+		width: 55%;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		font-size: 16px;
+		color: #666;
+	}
+	
+	.statusText {
+		height: 40px;
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		font-size: 30rpx;
+	}
 </style>

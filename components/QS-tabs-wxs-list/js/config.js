@@ -1,5 +1,5 @@
 function log(t) {
-	// console.log(t);
+	return console.log(t);
 }
 
 module.exports = {

@@ -32,8 +32,7 @@ function QSTabsWxsListMixin(){
 			return {
 				scrollTop: 0, // 保证性能勿删
 				oldScrollTop: 0, // 保证性能勿删
-				setScrollTopcount: 0, // 保证性能勿删
-				scrollTimeout: null
+				setScrollTopcount: 0 // 保证性能勿删
 			}
 		},
 		watch: {
@@ -61,19 +60,15 @@ function QSTabsWxsListMixin(){
 		methods: {
 			scrollFn(e) { // 保证性能勿删
 				if (e.detail.scrollTop !== 0) {
-					if(this.scrollTimeout){ 
-						clearTimeout(this.scrollTimeout);
-					}
-					this.scrollTimeout = setTimeout(()=>{
-						this.oldScrollTop = e.detail.scrollTop;
-					}, 100);
-					
+					this.oldScrollTop = e.detail.scrollTop;
 				}
 			},
 			toOldScrollTop() { // 保证性能勿删
-				this.$nextTick(() => {
+				let _this = this;
+				_this.$nextTick(() => {
 					setTimeout(() => {
-						this.scrollTop = (this.setScrollTopcount++ % 2 === 0) ? this.oldScrollTop + 1 : this.oldScrollTop - 1;
+						_this.scrollTop = (_this.setScrollTopcount++ % 2 === 0) ? _this.oldScrollTop + 0.00001 : _this.oldScrollTop - 0.00001;
+						if(_this.setScrollTopcount >= 3000) _this.setScrollTopcount = 0;
 					}, 0)
 				})
 			}

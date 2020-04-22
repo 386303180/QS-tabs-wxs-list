@@ -1,46 +1,29 @@
 <template>
-	<view 
-	class="container"
-	:style="{
+	<view class="container" :style="{
 		'z-index': zIndex
 	}">
-		<view 
-		class="tabs-container"
-		:style="{
+		<!-- 顶部tabs -->
+		<view v-if="tabsPosition === 'top'" class="tabs-container" :style="{
 			'position': String(tabsSticky)==='true'?'sticky': 'relative',
 			'z-index': Number(zIndex) + 2,
 			'background-color': tabs[getSwiperCurrent]?(tabs[getSwiperCurrent].tabsBackgroundColor || tabsBackgroundColor):tabsBackgroundColor
 		}">
-			<scroll-view 
-			id="tabs-scroll"
-			scroll-x 
-			:scroll-left="scrollLeft"
-			class="tabs-scroll" 
-			scroll-with-animation>
-				<view 
-				class="tabs-scroll-box"
-				:style="{
+			<scroll-view id="tabs-scroll" scroll-x :scroll-left="scrollLeft" class="tabs-scroll" scroll-with-animation>
+				<view class="tabs-scroll-box" :style="{
 					'height': tabHeight,
 					'line-height': tabHeight
 				}">
-					<view 
-					class="tabs-scroll-item" 
-					:style="{
+					<view class="tabs-scroll-item" :style="{
 						'min-width': minWidth,
 						'padding': '0 ' + space
-					}"
-					v-for="(item, index) in tabs" 
-					:id="preId + index"
-					:key="index"
-					@tap="tabTap(index)">
-						<view class="hide_text" 
-						:style="{
+					}" v-for="(item, index) in tabs"
+					 :id="preId + index" :key="index" @tap="tabTap(index)">
+						<view class="hide_text" :style="{
 							'font-size': fontSize
 						}">
 							{{item.name || item}}
 						</view>
-						<view class="abs_text"
-						:style="{
+						<view class="abs_text" :style="{
 							'font-size':  getSwiperCurrent===index?activeFontSize:fontSize,
 							'color': getSwiperCurrent===index?(tabs[getSwiperCurrent]?(tabs[getSwiperCurrent].activeFontColor || activeFontColor || tabsFontColor):(activeFontColor || tabsFontColor)):tabsFontColor,
 							'font-weight': String(activeBold)==='true'?(getSwiperCurrent===index?'bold':'0'):'0'
@@ -48,11 +31,8 @@
 							{{item.name || item}}
 						</view>
 					</view>
-					
-					<view 
-					id="line" 
-					class="line"
-					:style="{
+
+					<view id="line" class="line" :style="{
 						'height': lineHieght,
 						'width': wxsLineWidth + 'px',
 						'bottom': lineMarginBottom,
@@ -62,164 +42,142 @@
 				</view>
 			</scroll-view>
 		</view>
-		<view 
-		class="swiper-container" 
-		:style="{
+
+		<!-- content -->
+		<view class="swiper-container" :style="{
 			'z-index': Number(zIndex) + 1,
 			'background-color': tabs[getSwiperCurrent]?(tabs[getSwiperCurrent].swiperBackgroundColor||swiperBackgroundColor):swiperBackgroundColor
 		}">
-			<block v-if="String(hasRefresh) === 'true'">
-				<view 
-				class="refresh-container"
-				id="refresh-container"
-				@touchstart="QSREFRESHWXS.touchstart"
-				@touchmove="QSREFRESHWXS.touchmove"
-				@touchend="QSREFRESHWXS.touchend"
-				@touchcancel="QSREFRESHWXS.touchend"
-				:change:refreshstatus="QSREFRESHWXS.refreshStatusChange"
-				:data-refreshdistance="refreshDistance"
-				:data-refreshstatus="refreshStatus"
-				:data-readyrefresh="readyRefresh"
-				:data-refreshshow="refreshShow"
-				:refreshstatus="refreshStatus">
-					<view 
-					class="refresh-image-container"
-					:class="{'show': (String(refreshShow) == 'true')}" 
-					:style="{ 
-						'height': refreshDistance + 'px'
-					}">
-						<image 
-						id="refreshImage" 
-						v-if="refreshImage" 
-						:src="refreshImage" 
-						mode="scaleToFill" 
-						class="refresh-image"
-						:class="{'isRefreshing': (String(readyRefresh) == 'false')}"
-						></image>
-						<view class="refreshText" :style="{
-							'font-size': refreshTextFontSize,
-							'color': refreshTextColor
-						}">{{getRefreshStatusText}}</view>
-					</view>
-					<swiper 
-					id="swiper"
-					class="swiper"
-					:style="{
-						'height': getSwiperHieght + 'px'
-					}"
-					:current="getSwiperCurrent"
-					@transition="QSTABSWXS.transition"
-					:change:tabsInfo="QSTABSWXS.tabsInfoChange"
-					:tabsInfo="tabsInfo"
-					:data-tabsinfo="tabsInfo"
-					:data-current="getCurrent"
-					:data-windowwidth="windowWidth"
-					:data-linewidth="lineWidth"
-					:data-scrollleft="scrollLeft"
-					:data-tabsinfochangebl="tabsInfoChangeBl"
-					@change="QSTABSWXS.swiperChange"
-					@animationfinish="QSTABSWXS.animationfinish">
-						<swiper-item 
-						v-for="(item, index) in tabs" 
-						:key="index"
-						class="swiper-item"
-						:style="{
-							'background-color': item.swiperItemBackgroundColor || 'rgba(255,255,255,0)'
+			<!-- swiper -->
+			<block v-if="contentMode === 'swiper'">
+				<!-- 下拉刷新 -->
+				<block v-if="String(hasRefresh) === 'true'">
+					<view class="refresh-container" id="refresh-container" @touchstart="QSREFRESHWXS.touchstart" @touchmove="QSREFRESHWXS.touchmove"
+					 @touchend="QSREFRESHWXS.touchend" @touchcancel="QSREFRESHWXS.touchend" :change:refreshstatus="QSREFRESHWXS.refreshStatusChange"
+					 :data-refreshdistance="refreshDistance" :data-refreshstatus="refreshStatus" :data-readyrefresh="readyRefresh"
+					 :data-refreshshow="refreshShow" :refreshstatus="refreshStatus">
+						<view class="refresh-image-container" :class="['show']" :style="{ 
+							'height': refreshDistance + 'px'
 						}">
-							<!-- 需自行增加列表模板并根据传入的type判断, 展示不同的列表模板 -->
-							<block v-if="type === 'xxx'">
-								
-							</block>
-							<block v-else>
-								<templateDef 
-								ref="QSTabsWxsRef" 
-								:readyRefresh="getCurrent===index?Boolean(readyRefresh):false"
-								:show="String(readyRefresh) === 'true'?
-								(getCurrent===index):
-								(((index-getCurrent)<=1 && (index-getCurrent)>=-1)?
-								true:false)" 
-								:type="type" 
-								:current="getCurrent" 
-								:tab="item" 
-								:index="index" 
-								@refreshEnd="setRefreshStatus(4)"></templateDef>
-							</block>
-						</swiper-item>
-					</swiper>
-				</view>
-			</block>
-			<block v-else>
-				<swiper
-				id="swiper"
-				class="swiper"
-				:style="{
+							<image id="refreshImage" v-if="refreshImage" :src="refreshImage" mode="scaleToFill" class="refresh-image" :class="{'isRefreshing': isRefreshing}"></image>
+							<view class="refreshText" :style="{
+								'font-size': refreshTextFontSize,
+								'color': refreshTextColor
+							}">{{refreshStatusText}}</view>
+						</view>
+						<swiper id="swiper" class="swiper" :style="{
+							'height': getSwiperHieght + 'px'
+						}" :current="getSwiperCurrent"
+						 @transition="QSTABSWXS.transition" :change:tabsInfo="QSTABSWXS.tabsInfoChange" :tabsInfo="tabsInfo"
+						 :data-tabsinfo="tabsInfo" :data-current="getCurrent" :data-windowwidth="windowWidth" :data-linewidth="lineWidth"
+						 :data-scrollleft="scrollLeft" :data-tabsinfochangebl="tabsInfoChangeBl" @change="QSTABSWXS.swiperChange"
+						 @animationfinish="QSTABSWXS.animationfinish">
+							<swiper-item v-for="(item, index) in tabs" :key="index" class="swiper-item" :style="{
+								'background-color': item.swiperItemBackgroundColor || 'rgba(255,255,255,0)'
+							}">
+								<QSTabsListTemplate ref="QSTabsWxsRef" :readyRefresh="getCurrent===index?Boolean(readyRefresh):false" :show="String(readyRefresh) === 'true'?
+									(getCurrent===index):
+									(((index-getCurrent)<=1 && (index-getCurrent)>=-1)?
+									true:false)"
+								 :type="type" :current="getCurrent" :tab="item" :index="index" @refreshEnd="setRefreshStatus"></QSTabsListTemplate>
+							</swiper-item>
+						</swiper>
+					</view>
+				</block>
+				<!-- 没有下拉刷新 -->
+				<block v-else>
+					<swiper id="swiper" class="swiper" :style="{
 					'height': getSwiperHieght + 'px'
-				}"
-				:current="getSwiperCurrent"
-				@transition="QSTABSWXS.transition"
-				:change:tabsInfo="QSTABSWXS.tabsInfoChange"
-				:tabsInfo="tabsInfo"
-				:data-tabsinfo="tabsInfo"
-				:data-current="getCurrent"
-				:data-windowwidth="windowWidth"
-				:data-linewidth="lineWidth"
-				:data-scrollleft="scrollLeft"
-				:data-tabsinfochangebl="tabsInfoChangeBl"
-				@change="QSTABSWXS.swiperChange"
-				@animationfinish="QSTABSWXS.animationfinish">
-					<swiper-item 
-					v-for="(item, index) in tabs" 
-					:key="index"
-					class="swiper-item"
-					:style="{
+				}" :current="getSwiperCurrent"
+					 @transition="QSTABSWXS.transition" :change:tabsInfo="QSTABSWXS.tabsInfoChange" :tabsInfo="tabsInfo"
+					 :data-tabsinfo="tabsInfo" :data-current="getCurrent" :data-windowwidth="windowWidth" :data-linewidth="lineWidth"
+					 :data-scrollleft="scrollLeft" :data-tabsinfochangebl="tabsInfoChangeBl" @change="QSTABSWXS.swiperChange"
+					 @animationfinish="QSTABSWXS.animationfinish">
+						<swiper-item v-for="(item, index) in tabs" :key="index" class="swiper-item" :style="{
 						'background-color': item.swiperItemBackgroundColor || 'rgba(255,255,255,0)'
 					}">
-						<!-- 需自行增加列表模板并根据传入的type判断, 展示不同的列表模板 -->
-						<block v-if="type === 'xxx'">
-							
-						</block>
-						<block v-else>
-							<templateDef 
-							ref="QSTabsWxsRef" 
-							:readyRefresh="getCurrent===index?readyRefresh:false"
-							:show="String(readyRefresh) === 'true'?
+							<QSTabsListTemplate ref="QSTabsWxsRef" :readyRefresh="getCurrent===index?readyRefresh:false" :show="String(readyRefresh) === 'true'?
 							(getCurrent===index):
 							(((index-getCurrent)<=1 && (index-getCurrent)>=-1)?
-							true:false)" 
-							:type="type" 
-							:current="getCurrent" 
-							:tab="item" 
-							:index="index" 
-							@refreshEnd="setRefreshStatus(4)"></templateDef>
-						</block>
-					</swiper-item>
-				</swiper>
+							true:false)"
+							 :type="type" :current="getCurrent" :tab="item" :index="index" @refreshEnd="setRefreshStatus"></QSTabsListTemplate>
+						</swiper-item>
+					</swiper>
+				</block>
 			</block>
-			
+			<block v-else>
+				
+			</block>
 		</view>
-		
+
+		<!-- 底部tabs -->
+		<view v-if="tabsPosition === 'bottom'" class="tabs-container" :style="{
+			'position': String(tabsSticky)==='true'?'sticky': 'relative',
+			'z-index': Number(zIndex) + 2,
+			'background-color': tabs[getSwiperCurrent]?(tabs[getSwiperCurrent].tabsBackgroundColor || tabsBackgroundColor):tabsBackgroundColor
+		}">
+			<scroll-view id="tabs-scroll" scroll-x :scroll-left="scrollLeft" class="tabs-scroll" scroll-with-animation>
+				<view class="tabs-scroll-box" :style="{
+					'height': tabHeight,
+					'line-height': tabHeight
+				}">
+					<view class="tabs-scroll-item" :style="{
+						'min-width': minWidth,
+						'padding': '0 ' + space
+					}" v-for="(item, index) in tabs"
+					 :id="preId + index" :key="index" @tap="tabTap(index)">
+						<view class="hide_text" :style="{
+							'font-size': fontSize
+						}">
+							{{item.name || item}}
+						</view>
+						<view class="abs_text" :style="{
+							'font-size':  getSwiperCurrent===index?activeFontSize:fontSize,
+							'color': getSwiperCurrent===index?(tabs[getSwiperCurrent]?(tabs[getSwiperCurrent].activeFontColor || activeFontColor || tabsFontColor):(activeFontColor || tabsFontColor)):tabsFontColor,
+							'font-weight': String(activeBold)==='true'?(getSwiperCurrent===index?'bold':'0'):'0'
+						}">
+							{{item.name || item}}
+						</view>
+					</view>
+
+					<view id="line" class="line" :style="{
+						'height': lineHieght,
+						'width': wxsLineWidth + 'px',
+						'bottom': lineMarginBottom,
+						'background-color': tabs[getSwiperCurrent]?(tabs[getSwiperCurrent].lineColor || lineColor):lineColor
+					}">
+					</view>
+				</view>
+			</scroll-view>
+		</view>
+
 		<!-- #ifdef MP -->
-		<view 
-		class="disabled" 
-		:style="{
+		<view class="disabled" :style="{
 			'z-index': Number(zIndex) + 3
-		}"
-		v-if="disabled"
-		@touchmove.prevent="_emit('disabledTouchmove')"
-		@tap.prevent="_emit('disabledTap')">
+		}" v-if="disabled" @touchmove.prevent="_emit('disabledTouchmove')"
+		 @tap.prevent="_emit('disabledTap')"></view>
 		<!-- #endif -->
+
 		<!-- #ifndef MP -->
-		<view 
-		class="disabled" 
-		:style="{
-			'z-index': Number(zIndex) + 3
-		}"
-		v-if="disabled"
-		@touchmove.stop="_emit('disabledTouchmove')"
-		@tap.stop="_emit('disabledTap')">
+		<view class="disabled" :style="{
+		'z-index': Number(zIndex) + 3
+		}" v-if="disabled" @touchmove.stop="_emit('disabledTouchmove')"
+		 @tap.stop="_emit('disabledTap')"></view>
 		<!-- #endif -->
-			
-		</view>
+
+		<!-- #ifdef MP -->
+		<view class="disabled" :style="{
+			'z-index': Number(zIndex) + 4
+		}" v-show="ndisabled" @touchmove.prevent="voidFn"
+		 @tap.prevent="voidFn"></view>
+		<!-- #endif -->
+
+		<!-- #ifndef MP -->
+		<view class="disabled" :style="{
+		'z-index': Number(zIndex) + 4
+		}" v-show="ndisabled" @touchmove.stop="voidFn"
+		 @tap.stop="voidFn"></view>
+		<!-- #endif -->
 	</view>
 </template>
 
@@ -228,12 +186,13 @@
 
 <script>
 	import _app from './js/config.js';
-	import templateDef from './components/QS-tabs-wxs-template-def.vue';
+	import QSTabsListTemplate from './components/QS-tabs-wxs-list-template.vue';
 	import publicProps from './js/publicProps.js';
-	const {windowWidth} = uni.getSystemInfoSync();
+	const Sys = uni.getSystemInfoSync();
+	console.log('系统信息: ' + JSON.stringify(Sys));
 	export default {
 		components: {
-			templateDef
+			QSTabsListTemplate
 		},
 		props: publicProps,
 		data() {
@@ -242,8 +201,8 @@
 				refPre: 'QSTabsWxsRef',
 				tabs: [],
 				tabsData: [],
-				tabsInfo: [],
-				windowWidth,
+				tabsInfo: '',
+				windowWidth: Sys.windowWidth,
 				current: 0,
 				swiperCurrent: 0,
 				scrollLeft: 0,
@@ -253,7 +212,11 @@
 				wxsLineWidth: 0,
 				tabsInfoChangeBl: false,
 				disabled: false,
+				ndisabled: false,
 				refreshStatus: 1,
+				refreshStatusText: this.beforRefreshText,
+				isRefreshing: false,
+				contentMode: 'swiper',
 				// #ifndef H5
 				readyRefresh: false,
 				refreshShow: false,
@@ -266,51 +229,47 @@
 		},
 		computed: {
 			getCurrent() {
-				return this.current>this.tabs.length?this.tabs.length:this.current;
+				return this.current > this.tabs.length ? this.tabs.length : this.current;
 			},
 			getSwiperCurrent() {
-				return this.swiperCurrent>this.tabs.length?this.tabs.length:this.swiperCurrent;
+				return this.swiperCurrent > this.tabs.length ? this.tabs.length : this.swiperCurrent;
 			},
 			getSwiperHieght() {
 				return Number(this.height) - Number(this.tabsHeight);
-			},
-			getRefreshStatusText() {
-				switch (this.refreshStatus){
-					case 1:
-						return this.beforRefreshText;
-						break;
-					case 2:
-						return this.releaseRefreshText;
-						break;
-					case 3:
-						return this.isRefreshingText;
-						break;
-					case 4:
-						return this.completeRefreshText;
-						break;
-					case 5:
-						return this.completeRefreshText;
-						break;
-				}
 			}
 		},
 		methods: {
 			setRefreshStatus(status) {
-				if(status === this.refreshStatus) return;
+				if (status === this.refreshStatus) return;
 				this.refreshStatus = status;
 				// console.log(status);
-				switch (status){
+				switch (status) {
+					case 1:
+						this.refreshStatusText = this.beforRefreshText;
+						break;
 					case 2:
+						this.refreshStatusText = this.releaseRefreshText;
 						// #ifndef H5
 						uni.vibrateShort();
 						// #endif
 						break;
 					case 3:
-						this._doInit({refresh: true});
+						this.refreshStatusText = this.isRefreshingText;
+						this.isRefreshing = true;
+						this._doInit({
+							refresh: true
+						});
+						break;
+					case 4:
+						this.refreshStatusText = this.successRefreshText;
 						break;
 					case 5:
-						setTimeout(()=>{
+						this.refreshStatusText = this.failRefreshText;
+						break;
+					case 6:
+						setTimeout(() => {
 							this.setRefreshStatus(1);
+							this.isRefreshing = false;
 							this.refreshShow = false;
 						}, 1000);
 						break;
@@ -331,19 +290,20 @@
 				// #ifdef H5
 				this.readyRefresh = String(obj.readyRefresh);
 				// #endif
-				// this.$set(this, 'readyRefresh', obj.readyRefresh);
 			},
 			setDisabled(bl) {
-				this.disabled = bl;
+				if(this.disabled !== bl) this.disabled = bl;
+			},
+			setNdisabled(bl) {
+				if(this.ndisabled !== bl) this.ndisabled = bl;
 			},
 			setWxsLineWidth(lineWidth) {
-				_app.log('触发了设置线条宽度:' + lineWidth);
 				this.wxsLineWidth = lineWidth;
 			},
 			getTabsHeight() {
 				let view = uni.createSelectorQuery().in(this);
 				view.select('.tabs-container').boundingClientRect();
-				view.exec(res=>{
+				view.exec(res => {
 					_app.log('tabs高度:' + JSON.stringify(res));
 					this.tabsHeight = res[0].height;
 				})
@@ -351,148 +311,168 @@
 			getTabsInfo(returnPromise) {
 				let view = uni.createSelectorQuery().in(this);
 				let scroll = uni.createSelectorQuery().in(this);
-				scroll.select('#tabs-scroll').fields({ scrollOffset: true });
+				scroll.select('#tabs-scroll').fields({
+					scrollOffset: true
+				});
 				for (let i = 0; i < this.tabs.length; i++) {
 					view.select('#' + this.preId + i).boundingClientRect();
 				}
 				const fn = (cb) => {
 					// _app.log('fn执行');
-					scroll.exec((data)=>{
+					scroll.exec((data) => {
 						_app.log('scroll布局信息:' + JSON.stringify(data));
 						view.exec((res) => {
 							_app.log('tabs布局信息:' + JSON.stringify(res));
-							const arr = [];
+							let arr = '';
 							for (let i = 0; i < res.length; i++) {
 								const item = res[i];
-								if(item) {
+								if (item) {
 									item.left += data[0].scrollLeft;
-									// #ifdef H5
-									arr.push(JSON.stringify(item));
-									// #endif
-									// #ifndef H5
-									arr.push(item);
-									// #endif
+									arr += i === 0 ? (`${item.top},${item.right},${item.bottom},${item.left},${item.width}`) :
+										(`|${item.top},${item.right},${item.bottom},${item.left},${item.width}`);
 								}
 							}
 							this.tabsInfoChangeBl = true;
-							// #ifdef H5
-							this.tabsInfo = JSON.stringify(arr);
-							// #endif
-							// #ifndef H5
 							this.tabsInfo = arr;
-							// #endif
-							// _app.log('tabsInfo:' + JSON.stringify(arr));
-							if(cb && typeof cb === 'function') cb(arr);
+							_app.log('tabsInfo:' + JSON.stringify(arr));
+							if (cb && typeof cb === 'function') cb(arr);
 						})
 					})
 				}
-				if(returnPromise) {
-					return new Promise((resolve, reject)=>{
-						setTimeout(()=>{
-							fn((arr)=>{
+				if (returnPromise) {
+					return new Promise((resolve, reject) => {
+						setTimeout(() => {
+							fn((arr) => {
 								resolve(arr);
 							});
 						}, 200)
 					})
 				}
-				fn();
+				setTimeout(fn, 0)
+				// fn();
 			},
 			setTabs(arr) {
-				const fn = ()=>{
+				const fn = () => {
 					this.tabs = arr;
 					this.initStatus = new Array(arr.length);
-					this.$nextTick(()=>{	//H5需要nextTick后能拿到布局信息
-						setTimeout(()=>{	//QQ小程序需要setTimeout后能拿到布局信息
+					this.$nextTick(() => { //H5需要nextTick后能拿到布局信息
+						setTimeout(() => { //QQ小程序需要setTimeout后能拿到布局信息
 							this.getTabsInfo();
 							_app.log('初始化');
 							const defCurrent = this._getDefCurrent();
 							_app.log('defCurrent:' + defCurrent);
 							this.swiperCurrent = defCurrent;
 							this.setHasRefreshContainerBackgroundColor(defCurrent);
-							this._doInit({index: defCurrent, init: true});
+							this._doInit({
+								index: defCurrent,
+								init: true
+							});
 							this.getTabsHeight();
 						}, 0)
 					})
 				}
-				if(this.count++ === 0) {
+				if (this.count++ === 0) {
 					fn();
-				}else{
+				} else {
 					this.tabs = [];
 					this.current = 0;
 					this.swiperCurrent = 0;
-					this.$nextTick(()=>{
+					this.$nextTick(() => {
 						setTimeout(fn, 0);
+						this.setNdisabled(false);
 					})
 				}
 			},
 			setHasRefreshContainerBackgroundColor(index) {
 				const tab = this.tabs[index];
-				if(tab && tab.hasRefreshContainerBackgroundColor) {
+				if (tab && tab.hasRefreshContainerBackgroundColor) {
 					this.$emit('setRefreshContainerBgColor', tab.hasRefreshContainerBackgroundColor);
 				}
 			},
-			_doInit({index, init, tap, slide, refresh} = {}) {
-				try{
-					index = index !== undefined? index: this.current;
-					if(!refresh) {
+			_doInit({
+				index,
+				init,
+				tap,
+				slide,
+				refresh
+			} = {}) {
+				try {
+					index = index !== undefined ? index : this.current;
+					if (!refresh) {
 						const bl_status = this.initStatus[index] === true;
-						if(this.initStatus[index] === true) {
-							if(slide || init) return;
-							if(tap && !(String(this.tapTabRefresh) === 'true')) {
+						if (this.initStatus[index] === true) {
+							if (slide || init) return;
+							if (tap && !(String(this.tapTabRefresh) === 'true')) {
 								return;
-							}else if (!(this.current === index)) {
+							} else if (!(this.current === index)) {
 								return;
-							}else{
+							} else {
 								refresh = true;
 							}
 						}
 					}
-					
+
 					const ref = this.$refs[this.refPre][index];
-					if(ref) {
+					if (ref) {
 						const initFn = ref[this.initFnName];
-						if(initFn && typeof initFn === 'function') {
+						if (initFn && typeof initFn === 'function') {
 							_app.log('执行了组件内的init函数');
 							this.initStatus[index] = true;
 							initFn(refresh);
-						}else{
+						} else {
 							console.log(this.initFnName + 'not a function');
 						}
-					}else{
+					} else {
 						console.log('not find ref or init function');
 					}
-				}catch(e){
+				} catch (e) {
 					//TODO handle the exception
 					console.log('_doInit方法异常:' + JSON.stringify(e));
 				}
 			},
 			_getDefCurrent() {
 				const defCurrent = Number(this.defCurrent);
-				const endCurrent = this.tabs.length-1;
-				return defCurrent>endCurrent?endCurrent:defCurrent;
+				const endCurrent = this.tabs.length - 1;
+				return defCurrent > endCurrent ? endCurrent : defCurrent;
 			},
-			setCurrent(obj) {	//由wxs内部触发animationinish事件
+			setCurrent(obj) { //由wxs内部触发animationinish事件
 				const current = Number(obj.current);
-				if(this.swiperCurrent !== current) {
+				if (this.swiperCurrent !== current) {
 					this.swiperCurrent = current;
 				}
-				if(this.current !== current){
+				if (this.current !== current) {
+					this.setNdisabled(true);
+					const time = this.initStatus[current] === true ? 100 : 500;
 					this.current = current;
-					this._doInit({index: current, slide: true});
+					this._doInit({
+						index: current,
+						slide: true
+					});
+					setTimeout(() => {
+						this.$nextTick(() => {
+							setTimeout(() => {
+								this.setNdisabled(false);
+							}, 0)
+						})
+					}, time)
 				}
 			},
 			setSwiperCurrent(obj) {
+				if (String(this.restrictSlider) === 'true' && this.swiperCurrent !== current) this.setNdisabled(true);
 				const current = Number(obj.current);
 				this.swiperCurrent = current;
 				this.setHasRefreshContainerBackgroundColor(current);
 			},
 			tabTap(index) {
 				this.swiperCurrent = index;
-				this._doInit({index, tap: true});
+				this._doInit({
+					index,
+					tap: true
+				});
 			},
 			setScrollLeft(obj) {
 				_app.log('setScrollLeft:' + JSON.stringify(obj));
-				if((!(String(this.autoCenter) === 'true')) && !Boolean(obj.tabsChange)) return;
+				if ((!(String(this.autoCenter) === 'true')) && !Boolean(obj.tabsChange)) return;
 				this.scrollLeft = Number(obj.scrollLeft);
 			},
 			setTabsInfoChangeBl() {
@@ -507,6 +487,7 @@
 </script>
 
 <style scoped>
+	@import url("css/box-sizing-border-box.css");
 	@import url("css/QS-tabs-wxs-list.css");
 	@import url("css/QS-refresh-image-isrefreshing.css");
 </style>

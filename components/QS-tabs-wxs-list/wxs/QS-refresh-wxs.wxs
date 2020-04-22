@@ -1,4 +1,5 @@
 var startY = 0;
+var touchStatus = 0;
 
 var touchstart = function(e, ins) {
 	startY = e.touches[0].pageY;
@@ -10,6 +11,7 @@ var touchstart = function(e, ins) {
 			'transition': '0s'
 		})
 	}
+	if(touchStatus!==0) touchStatus = 0;
 }
 
 var touchmove = function(e, ins) {
@@ -57,6 +59,7 @@ var touchmove = function(e, ins) {
 			}
 		}
 	}
+	if(touchStatus!==1) touchStatus = 1;
 }
 
 var touchend = function(e, ins) {
@@ -69,26 +72,34 @@ var touchend = function(e, ins) {
 		});
 		if (refreshStatus === 2) {
 			ins.callMethod('setRefreshStatus', 3);
-		} else {
+			var refreshDistance = parseFloat(dataset.refreshdistance);
 			refreshContianer.setStyle({
-				'transform': 'translateY(0)',
+				'transform': 'translateY(' + refreshDistance + 'px)',
 				'transition': '.3s'
 			})
-			ins.callMethod('setRefreshShow', {
-				refreshShow: false
-			});
+		} else {
+			if(touchStatus === 1) {
+				refreshContianer.setStyle({
+					'transform': 'translateY(0)',
+					'transition': '.3s'
+				})
+				ins.callMethod('setRefreshShow', {
+					refreshShow: false
+				});
+			}
 		}
 	}
+	if(touchStatus!==2) touchStatus = 2;
 }
 
 var refreshStatusChange = function(n, o, ins) {
-	if (n === 4) {
+	if (n === 4 || n === 5) {
 		var refreshContianer = ins.selectComponent('#refresh-container');
 		refreshContianer.setStyle({
 			'transform': 'translateY(0)',
 			'transition': '.3s 1s'
 		})
-		ins.callMethod('setRefreshStatus', 5);
+		ins.callMethod('setRefreshStatus', 6);
 	}
 }
 

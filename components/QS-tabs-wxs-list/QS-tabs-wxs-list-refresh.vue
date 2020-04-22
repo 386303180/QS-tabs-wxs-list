@@ -22,6 +22,7 @@
 				<QSTabsWxsList 
 				ref="QSTabsWxsList"
 				hasRefresh
+				:tabsPosition="tabsPosition"
 				:minWidth="minWidth"
 				:space="space"
 				:tabHeight="tabHeight"
@@ -49,9 +50,12 @@
 				:beforRefreshText="beforRefreshText"
 				:releaseRefreshText="releaseRefreshText"
 				:isRefreshingText="isRefreshingText"
+				:successRefreshText="successRefreshText"
+				:failRefreshText="failRefreshText"
 				:completeRefreshText="completeRefreshText"
 				:refreshTextColor="refreshTextColor"
 				:refreshTextFontSize="refreshTextFontSize"
+				:restrictSlider="restrictSlider"
 				@disabledTouchmove="_emit('disabledTouchmove')"
 				@disabledTap="_emit('disabledTap')"
 				@setRefreshContainerBgColor="setHasRefreshContainerBackgroundColor">
@@ -108,6 +112,7 @@
 </script>
 
 <style scoped>
+	@import url("css/box-sizing-border-box.css");
 	.container {
 		height: 100%;
 		width: 100%;

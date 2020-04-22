@@ -1,4 +1,8 @@
 var publicProps = {
+	tabsPosition: {	//tabs位置 top: 上, bottom: 下
+		type: String,
+		default: 'top'
+	},
 	minWidth: { //tab最小宽度
 		type: String,
 		default: '250rpx'
@@ -111,6 +115,14 @@ var publicProps = {
 		type: String,
 		default: '刷新中...'
 	},
+	successRefreshText: {//刷新成功
+		type: String,
+		default: '刷新成功'
+	},
+	failRefreshText: {//刷新失败
+		type: String,
+		default: '刷新失败'
+	},
 	completeRefreshText: { //刷新完成文字
 		type: String,
 		default: '刷新完毕'
@@ -122,6 +134,10 @@ var publicProps = {
 	refreshTextFontSize: { //刷新文字的大小
 		type: String,
 		default: '25rpx'
+	},
+	restrictSlider: {	//限制用户只能滑动一块
+		type: [Boolean, String],
+		default: true
 	}
 }
 
