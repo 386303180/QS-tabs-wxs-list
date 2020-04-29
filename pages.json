@@ -1,7 +1,7 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/select/select",
+			"path": "pages/home/home",
 			"style": {}
 		},
 		{
@@ -36,7 +36,25 @@
 				"disableScroll": true // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/vShow/vShow",
+			"style": {
+				"disableScroll": true // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
+			}
+        }
+        ,{
+            "path" : "pages/vShow2/vShow2",
+			"style": {
+				"disableScroll": true // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
+			}
+        }
+        ,{
+            "path" : "pages/home/home",
+			"style": {
+				"disableScroll": true // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
+			}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "QS-tabs-wxs-list",

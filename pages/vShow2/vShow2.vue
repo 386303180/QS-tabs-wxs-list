@@ -11,8 +11,8 @@
 		</view>
 		<QSTabsWxs 
 		ref="QSTabsWxs" 
-		tabsPosition="bottom"
 		hasRefresh
+		contentMode="vShow"
 		refreshImage="/static/refresh.png"
 		activeFontColor="#fff" 
 		refreshTextColor="#fff"

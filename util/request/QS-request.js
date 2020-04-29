@@ -43,7 +43,7 @@ export function QSRequest({
 				reject(res);
 			}
 		}).catch(err => {
-			_app.log('访问接口成功:' + JSON.stringify(err));
+			_app.log('访问接口失败:' + JSON.stringify(err));
 			if (hasLoading) _app.hideLoading();
 			reject(err);
 		})

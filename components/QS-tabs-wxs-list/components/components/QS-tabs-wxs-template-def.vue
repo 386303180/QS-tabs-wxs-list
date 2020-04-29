@@ -2,11 +2,20 @@
 <template>
 	<!-- 为性能缘故, 当tab项多时, 请尽量不要删除 v-if="show" -->
 	<view v-if="show">
-		<view class="scroll-item" v-for="(item, ind) in list" :key="ind" @tap="itemClick(ind)">
-			<image lazy-load class="scroll-item-image" src="http://imgsrc.baidu.com/forum/w%3D580/sign=f480662e3cadcbef01347e0e9cae2e0e/8f5b1cd8bc3eb13517d8e851ab1ea8d3fc1f4489.jpg"
+		<view 
+		class="scroll-item" 
+		v-for="(item, ind) in list" 
+		:key="ind" 
+		:id="lazyLoadItemName + ind"
+		@tap="itemClick(ind)">
+			<image 
+			class="scroll-item-image" 
+			:src="
+				lazyArr[ind]&&lazyArr[ind].show?'http://imgsrc.baidu.com/forum/w%3D580/sign=f480662e3cadcbef01347e0e9cae2e0e/8f5b1cd8bc3eb13517d8e851ab1ea8d3fc1f4489.jpg':''
+			"
 			 mode="aspectFill"></image>
 			<view class="scroll-item-text">
-				{{item}}
+				{{lazyArr[ind]&&lazyArr[ind].show?item:''}}
 			</view>
 		</view>
 		<!-- 列表状态展示 -->
@@ -25,7 +34,14 @@
 	import {
 		doPageDemand
 	} from '../../js/pageDemand.js';
+	import QSLazyLoad from '@/js_sdk/QS-lazyLoad/QS-lazyLoad.js';
+	const lazyLoadItemName = 'lazyLoadItem_';
 	export default {
+		mixins: [
+			QSLazyLoad({
+				lazyLoadItemName, lazyArrName: 'lazyArr', orderly: 1
+			})
+		],
 		props: {
 			tab: {
 				type: [Object, String],
@@ -46,7 +62,7 @@
 				default: ''
 			},
 			show: {
-				type: [Boolean, String],
+				type: Boolean,
 				default: false
 			},
 			readyRefresh: {
@@ -62,7 +78,10 @@
 					pageSize: 50,
 					tabId: this.tab.id
 				},
-				statusText: {}
+				statusText: {},
+				
+				lazyArr: [],	//懒加载
+				lazyLoadItemName	//自定义id前缀
 			}
 		},
 		computed: {
@@ -92,9 +111,10 @@
 			},
 			getList(refresh, doEvent, force) {
 				let _this = this;
-				doPageDemand.call(this, {
+				doPageDemand.call(_this, {
 					getDataFn: getTabList, //获取数据的方法
-					success() {
+					successEnd() {
+						_this.QSLAZYLOAD_update(_this.list.length);
 						if (refresh) _this.$emit('refreshEnd', true);
 					},
 					fail() {
@@ -124,6 +144,9 @@
 
 					refreshClear: false, //刷新时是否清空数据
 				})
+			},
+			parentScroll(scrollTop) {	//来自父级模板的scroll滚动事件
+				this.QSLAZYLOAD_setScrollTop(scrollTop);
 			},
 			itemClick(ind) {
 				uni.showToast({

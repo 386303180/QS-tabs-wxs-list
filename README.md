@@ -1,10 +1,10 @@
 ## android端建议使用[QS-tabs-list Nvue版 ](https://ext.dcloud.net.cn/plugin?id=1399)
 
-# `请先下载示例项目体验，页面右上角蓝色按钮`
-# `若觉得复杂不会用请先加群交流不要盲目主观下定论`
-# 愿君学长松，慎勿作桃李。受屈不改心，然后知君子。
+* ## `请先下载示例项目体验，页面右上角蓝色按钮`
+* ## `若觉得复杂不会用请先加群交流不要盲目主观下定论`
+* ## 愿君学长松，慎勿作桃李。受屈不改心，然后知君子。
 
-# QQ交流群: 750104037 [点我加入](https://jq.qq.com/?_wv=1027&k=5OyZoXa)
+* ## QQ交流群: 750104037 [点我加入](https://jq.qq.com/?_wv=1027&k=5OyZoXa)
 
 # 注意: 目前若直接引入组件到项目中会报错, 因为方便示例演示, 在组件目录/components/QS-tabs-wxs-template-def.vue中的script标签最前面有引入示例用的js
 
@@ -14,11 +14,13 @@
 ### [支持度](#support)
 ### [使用须知](#notice-for-use)
 ### [传入参数](#props)
+### [config.js(v2.3+)](#config)
 ### [事件](#events)
 ### [ref调用函数](#refs)
 ### [传入参数](#props)
 ### [使用步骤](#use-steps)
 ### [分页加载概述](#pageDemand)
+### [组件结构图](#jg)
 ### [获取分页数据原理图](#img)
 
 # <span id="introduction">简介</span>
@@ -43,7 +45,7 @@
     |       |   |-- QS-tabs-wxs-list-components.css
     |       |   |-- QS-tabs-wxs-list.css
     |       |-- js
-    |       |   |-- config.js
+    |       |   |-- config.js	//v2.3新增checkContentMode、checkvShowDuration方法
     |       |   |-- pageDemand.js	//分页加载js
     |       |   |-- publicProps.js
     |       |-- mixins
@@ -131,7 +133,7 @@ document.body.addEventListener('touchmove', function (e) {
 		type: String,
 		default: '#f1505c'
 	},
-	lineMarginBottom: { //线条距离底部距离
+	lineMarginBottom: { //线条距离底部距离(需要加单位)
 		type: [Number, String],
 		default: 0
 	},
@@ -238,8 +240,21 @@ document.body.addEventListener('touchmove', function (e) {
 	restrictSlider: {	//限制用户只能滑动一块
 		type: [Boolean, String],
 		default: true
+	},
+	contentMode: {	//content展示模式, default、swiper、vShow, 若传default, 则会根据config.js中的checkContentMode返回相应模式, 安卓平台下传default或swiper都会经过checkContentMode的检测
+		type: String,
+		default: 'default'
 	}
 ```
+
+
+# <span id="config">config.js(v2.3+)</span>
+* ### config.js位于QS-tabs-wxs-list/js/config.js, 在v2.3中新增了两个方法
+| 方法名称| 形参| 说明|
+|------|------|------|------|
+| checkContentMode| | 安卓平台下, 当contentMode为default或swiper时, 进一步判断当前机型性能是否可以开启swiper模式|
+| checkvShowDuration| | (当前平台不支持wxs时)安卓平台下, 当contentMode最终为vShow时, 进一步配置当前机型的下拉刷新过渡时间值|
+
 # <span id="events">事件</span>
 | 事件名称| 形参| 说明|
 |------|------|------|------|
@@ -367,6 +382,8 @@ export default {
 # <span id="pageDemand">分页加载概述</span>
 ### 在components/QS-tabs-wxs-list/js/pageDemand.js文件中抽离出了公共的分页加载逻辑, 开发者可以自行修改逻辑从而契合自己的分页加载逻辑, 该js文件中的doPageDemand方法由call方法绑定this指向实现, 并传入相应参数, 具体逻辑需查看源码注释
 
+# <span id="jg">组件结构图</span>
+![Image](http://121.40.114.64/HuAnNing/image/QS-tabs-wxs-list%20%E7%BB%84%E4%BB%B6%E7%BB%93%E6%9E%84.png)
 # <span id="img">获取分页数据原理图</span>
 ![Image](http://121.40.114.64/HuAnNing/image/QS-tabs-wxs-list%20%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE%E5%8E%9F%E7%90%86.png)
 

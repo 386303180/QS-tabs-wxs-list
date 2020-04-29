@@ -138,6 +138,10 @@ var publicProps = {
 	restrictSlider: {	//限制用户只能滑动一块
 		type: [Boolean, String],
 		default: true
+	},
+	contentMode: {	//content展示模式
+		type: String,
+		default: 'default'
 	}
 }
 

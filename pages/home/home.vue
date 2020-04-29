@@ -1,9 +1,7 @@
 <template>
 	<view class="content">
 		<view class="topView"> 
-			<view class="topViewItem" @tap="back">
-				返回
-			</view>
+			<view class="topViewItem"></view>
 			<view class="">
 				QS-tabs-wxs-list
 			</view>
@@ -12,15 +10,15 @@
 		<QSTabsWxs 
 		ref="QSTabsWxs" 
 		tabsPosition="bottom"
-		hasRefresh
 		refreshImage="/static/refresh.png"
 		activeFontColor="#fff" 
 		refreshTextColor="#fff"
 		tabsFontColor="rgba(255,255,255,.7)" 
 		tabsBackgroundColor="#000" 
 		swiperBackgroundColor="#000" 
-		minWidth="125rpx" 
-		type="setColor"
+		minWidth="375rpx" 
+		:lineWidth=".2"
+		type="home"
 		:height="windowHeight-topViewHeight"></QSTabsWxs>
 	</view>
 </template>
@@ -40,14 +38,16 @@
 			}
 		},
 		onReady() {
-			let n = 0;
-			let tabs = Array(10).fill('').map(() => {
-				const name = 'tab_' + n++;
-				return {
-					name,
-					id: name
+			const tabs = [
+				{
+					name: 'Swiper',
+					id: 'Swiper'
+				},
+				{
+					name: 'vShow',
+					id: 'vShow'
 				}
-			});
+			]
 			this.getTopViewHeight();
 			this.$refs.QSTabsWxs.setTabs(tabs);
 		},
@@ -59,9 +59,6 @@
 					console.log('总高度:' + JSON.stringify(res));
 					this.topViewHeight = res[0].height;
 				})
-			},
-			back() {
-				uni.navigateBack();
 			}
 		}
 	}

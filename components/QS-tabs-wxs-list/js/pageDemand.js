@@ -57,6 +57,7 @@ function doPageDemand(obj) {	//分页加载获取数据方法, 页面使用call�
 		refreshClear	//刷新时是否清空数据
 	} = obj;
 	waitingName = waitingName || 'getting';
+	statusTextName = statusTextName || 'statusText';
 	if (_this[waitingName] && !force) return; //节流
 	if (doEvent) {	//判断列表状态
 		if(_this[statusTextName].code !== undefined) {
@@ -78,7 +79,6 @@ function doPageDemand(obj) {	//分页加载获取数据方法, 页面使用call�
 	newDatafields = newDatafields || 'list';
 	dataLastPageName = dataLastPageName || 'lastPage';
 	lastPageName = lastPageName || dataLastPageName;
-	statusTextName = statusTextName || 'statusText';
 	pageNumName = pageNumName || 'pageNum';
 	pageSizeName = pageSizeName || 'pageSize';
 	sizeName = sizeName || 'size';

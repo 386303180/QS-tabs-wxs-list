@@ -12,7 +12,8 @@
 		<QSTabsWxs 
 		ref="QSTabsWxs" 
 		tabsPosition="bottom"
-		hasRefresh
+		hasRefresh="false"
+		contentMode="vShow"
 		refreshImage="/static/refresh.png"
 		activeFontColor="#fff" 
 		refreshTextColor="#fff"
