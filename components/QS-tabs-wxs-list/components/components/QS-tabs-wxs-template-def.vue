@@ -1,23 +1,14 @@
 <!-- 该组件需自行实现, 此处只是示例 -->
 <template>
 	<!-- 为性能缘故, 当tab项多时, 请尽量不要删除 v-if="show" -->
-	<view v-if="show">
-		<view 
-		class="scroll-item" 
-		v-for="(item, ind) in list" 
-		:key="ind" 
-		:id="lazyLoadItemName + ind"
-		@tap="itemClick(ind)">
-			<image 
-			class="scroll-item-image" 
-			:src="
-				lazyArr[ind]&&lazyArr[ind].show?'http://imgsrc.baidu.com/forum/w%3D580/sign=f480662e3cadcbef01347e0e9cae2e0e/8f5b1cd8bc3eb13517d8e851ab1ea8d3fc1f4489.jpg':''
-			"
-			 mode="aspectFill"></image>
-			<view class="scroll-item-text">
-				{{lazyArr[ind]&&lazyArr[ind].show?item:''}}
-			</view>
-		</view>
+	
+	<view ><!-- v-if="show" -->
+		<!-- 若使用 QSVirtualList则不需要管v-if=show-->
+		<QSVirtualList 
+		ref="QSVirtualList" 
+		padding="0" 
+		:show="show" 
+		:refreshDistance="refreshDistance"></QSVirtualList>
 		<!-- 列表状态展示 -->
 		<view class="statusText" @tap="getList(false, true, false)" :style="{
 			'color': getColor
@@ -28,20 +19,16 @@
 </template>
 
 <script>
+	import QSVirtualList from '@/components/QS-virtualList/QS-virtualList.vue';
 	import {
 		getTabList
 	} from '@/util/getTabList.js';
 	import {
 		doPageDemand
 	} from '../../js/pageDemand.js';
-	import QSLazyLoad from '@/js_sdk/QS-lazyLoad/QS-lazyLoad.js';
 	const lazyLoadItemName = 'lazyLoadItem_';
 	export default {
-		mixins: [
-			QSLazyLoad({
-				lazyLoadItemName, lazyArrName: 'lazyArr', orderly: 1
-			})
-		],
+		components:{ QSVirtualList },
 		props: {
 			tab: {
 				type: [Object, String],
@@ -68,14 +55,20 @@
 			readyRefresh: {
 				type: [Boolean, String],
 				default: false
+			},
+			refreshDistance: {
+				type: Number,
+				default: 0
 			}
 		},
 		data() {
 			return {
+				useQSVirtualList: true,
+				
 				list: [],
 				sendData: {
 					pageNum: 1,
-					pageSize: 50,
+					pageSize: 10,
 					tabId: this.tab.id
 				},
 				statusText: {},
@@ -114,7 +107,9 @@
 				doPageDemand.call(_this, {
 					getDataFn: getTabList, //获取数据的方法
 					successEnd() {
-						_this.QSLAZYLOAD_update(_this.list.length);
+						
+						_this.$refs.QSVirtualList.setData(_this.list)
+						// _this.QSLAZYLOAD_update(_this.list.length);
 						if (refresh) _this.$emit('refreshEnd', true);
 					},
 					fail() {
@@ -146,7 +141,7 @@
 				})
 			},
 			parentScroll(scrollTop) {	//来自父级模板的scroll滚动事件
-				this.QSLAZYLOAD_setScrollTop(scrollTop);
+				this.$refs.QSVirtualList.setScroll(scrollTop);
 			},
 			itemClick(ind) {
 				uni.showToast({

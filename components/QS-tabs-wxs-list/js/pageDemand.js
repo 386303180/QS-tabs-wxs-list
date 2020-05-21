@@ -178,8 +178,10 @@ function doPageDemand(obj) {	//分页加载获取数据方法, 页面使用call�
 				status = getStatus('noData', noDataText||'');
 				_app.log('没有数据,status:' + JSON.stringify(status));
 			} else if (sendDataPageNum < lastPageNum) {	//可获取更多
+				_app.log('可获取更多');
 				status = getStatus('getMore');
 			} else {	//没有更多了
+				_app.log('没有更多了');
 				status = getStatus('noMore');
 			}
 		} else {

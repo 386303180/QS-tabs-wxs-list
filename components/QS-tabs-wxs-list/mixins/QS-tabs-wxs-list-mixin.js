@@ -26,6 +26,10 @@ function QSTabsWxsListMixin() {
 			readyRefresh: {
 				type: [Boolean, String],
 				default: false
+			},
+			refreshDistance: {
+				type: Number,
+				default: 0
 			}
 		},
 		data() {

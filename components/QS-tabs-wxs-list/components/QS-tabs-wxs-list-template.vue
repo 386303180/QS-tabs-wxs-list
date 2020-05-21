@@ -20,7 +20,7 @@
 				<block v-else>
 					<view class="width100">
 						<defTemplate ref="component" :tab="tab" :index="index" :current="current" :type="type" :show="getShow"
-						 :readyRefresh="readyRefresh" @refreshEnd="refreshEnd"></defTemplate>
+						 :readyRefresh="readyRefresh" @refreshEnd="refreshEnd" :refreshDistance="refreshDistance"></defTemplate>
 					</view>
 				</block>
 			</view>
@@ -41,13 +41,6 @@
 	import {
 		QSTabsWxsListMixin
 	} from '../mixins/QS-tabs-wxs-list-mixin.js';
-
-	import {
-		getTabList
-	} from '@/util/getTabList.js';
-	import {
-		doPageDemand
-	} from '../js/pageDemand.js';
 	export default {
 		components: {
 			defTemplate,

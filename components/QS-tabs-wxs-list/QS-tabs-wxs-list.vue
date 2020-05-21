@@ -96,11 +96,19 @@
 							<swiper-item v-for="(item, index) in tabs" :key="index" class="swiper-item" :style="{
 								'background-color': item.swiperItemBackgroundColor || 'rgba(255,255,255,0)'
 							}">
-								<QSTabsListTemplate :ref="refPre" :readyRefresh="getCurrent===index?Boolean(readyRefresh):false" :show="readyRefresh?
+								<QSTabsListTemplate 
+								:ref="refPre" 
+								:readyRefresh="getCurrent===index?Boolean(readyRefresh):false" :show="readyRefresh?
 									(getCurrent===index):
 									(((index-getCurrent)<=1 && (index-getCurrent)>=-1)?
 									true:false)"
-								 :type="type" :current="getCurrent" :tab="item" :index="index" @refreshEnd="setRefreshStatus" @scrollFn="scrollFn"></QSTabsListTemplate>
+								:type="type" 
+								:current="getCurrent" 
+								:tab="item" 
+								:index="index"
+								@refreshEnd="setRefreshStatus" 
+								@scrollFn="scrollFn"
+								:refreshDistance="Number(refreshDistance)"></QSTabsListTemplate>
 							</swiper-item>
 						</swiper>
 					</view>
@@ -165,7 +173,8 @@
 								'z-index': getCurrent===index?(Number(zIndex) + 3):(Number(zIndex) + 2)
 							}">
 								<QSTabsListTemplate :ref="refPre" :readyRefresh="getCurrent===index?readyRefresh:false" :show="getCurrent===index"
-								 :type="type" :current="getCurrent" :tab="item" :index="index" @refreshEnd="setRefreshStatus" @scrollFn="scrollFn"></QSTabsListTemplate>
+								 :type="type" :current="getCurrent" :tab="item" :index="index" @refreshEnd="setRefreshStatus" @scrollFn="scrollFn"
+								:refreshDistance="Number(refreshDistance)"></QSTabsListTemplate>
 							</view>
 						</view>
 					</view>
@@ -316,6 +325,9 @@
 	hasWxs = true;
 	// #endif
 	export default {
+		provide:{
+			nRefreshInstance: 90
+		},
 		components: {
 			QSTabsListTemplate
 		},
@@ -634,6 +646,9 @@
 							const defCurrent = this._getDefCurrent();
 							_app.log('defCurrent:' + defCurrent);
 							this.swiperCurrent = defCurrent;
+							if(this.nContentMode === 'vShow') {
+								this.current = defCurrent;
+							}
 							this.setHasRefreshContainerBackgroundColor(defCurrent);
 							this._doInit({
 								index: defCurrent,
@@ -672,18 +687,13 @@
 				refresh
 			} = {}) {
 				try {
+					if(refresh === false) return;
 					index = index !== undefined ? index : this.current;
 					if (!refresh) {
 						const bl_status = this.initStatus[index] === true;
 						if (this.initStatus[index] === true) {
-							if (slide || init) return;
-							if (tap && !(String(this.tapTabRefresh) === 'true')) {
-								return;
-							} else if (!(this.current === index)) {
-								return;
-							} else {
-								refresh = true;
-							}
+							if (slide || init || tap) return;
+							refresh = true;
 						}
 					}
 
@@ -745,18 +755,27 @@
 				this.setHasRefreshContainerBackgroundColor(current);
 			},
 			tabTap(index) {
+				let refresh;
 				switch (this.nContentMode) {
 					case 'swiper':
 						this.swiperCurrent = index;
+						this._doInit({
+							index,
+							tap: true
+						});
 						break;
 					case 'vShow':
 						this.swiperCurrent = index;
+						if(this.current === index) {
+							refresh = false
+						}
 						this.current = index;
 						break;
 				}
 				this._doInit({
 					index,
-					tap: true
+					tap: true,
+					refresh
 				});
 			},
 			setScrollLeft(obj) {
