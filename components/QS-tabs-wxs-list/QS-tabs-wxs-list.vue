@@ -26,7 +26,7 @@
 						<view class="abs_text" :style="{
 							'font-size':  getSwiperCurrent===index?activeFontSize:fontSize,
 							'color': getSwiperCurrent===index?(tabs[getSwiperCurrent]?(tabs[getSwiperCurrent].activeFontColor || activeFontColor || tabsFontColor):(activeFontColor || tabsFontColor)):tabsFontColor,
-							'font-weight': String(activeBold)==='true'?(getSwiperCurrent===index?'bold':'0'):'0'
+							'font-weight': String(activeBold)==='true'?(getSwiperCurrent===index?'800':'400'):'400'
 						}">
 							{{item.name || item}}
 						</view>
@@ -249,7 +249,7 @@
 						<view class="abs_text" :style="{
 							'font-size':  getSwiperCurrent===index?activeFontSize:fontSize,
 							'color': getSwiperCurrent===index?(tabs[getSwiperCurrent]?(tabs[getSwiperCurrent].activeFontColor || activeFontColor || tabsFontColor):(activeFontColor || tabsFontColor)):tabsFontColor,
-							'font-weight': String(activeBold)==='true'?(getSwiperCurrent===index?'bold':'0'):'0'
+							'font-weight': String(activeBold)==='true'?(getSwiperCurrent===index?'800':'400'):'400'
 						}">
 							{{item.name || item}}
 

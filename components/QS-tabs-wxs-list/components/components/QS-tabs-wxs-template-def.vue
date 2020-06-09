@@ -2,13 +2,8 @@
 <template>
 	<!-- 为性能缘故, 当tab项多时, 请尽量不要删除 v-if="show" -->
 	
-	<view ><!-- v-if="show" -->
-		<!-- 若使用 QSVirtualList则不需要管v-if=show-->
-		<QSVirtualList 
-		ref="QSVirtualList" 
-		padding="0" 
-		:show="show" 
-		:refreshDistance="refreshDistance"></QSVirtualList>
+	<view v-if="show">
+		<QSMasonry :list="list" padding="0"></QSMasonry>
 		<!-- 列表状态展示 -->
 		<view class="statusText" @tap="getList(false, true, false)" :style="{
 			'color': getColor
@@ -19,16 +14,15 @@
 </template>
 
 <script>
-	import QSVirtualList from '@/components/QS-virtualList/QS-virtualList.vue';
 	import {
 		getTabList
 	} from '@/util/getTabList.js';
 	import {
 		doPageDemand
 	} from '../../js/pageDemand.js';
-	const lazyLoadItemName = 'lazyLoadItem_';
+	import QSMasonry from '@/components/QS-Masonry/QS-Masonry.vue';
 	export default {
-		components:{ QSVirtualList },
+		components: {QSMasonry},
 		props: {
 			tab: {
 				type: [Object, String],
@@ -63,8 +57,6 @@
 		},
 		data() {
 			return {
-				useQSVirtualList: true,
-				
 				list: [],
 				sendData: {
 					pageNum: 1,
@@ -72,9 +64,6 @@
 					tabId: this.tab.id
 				},
 				statusText: {},
-				
-				lazyArr: [],	//懒加载
-				lazyLoadItemName	//自定义id前缀
 			}
 		},
 		computed: {
@@ -107,9 +96,6 @@
 				doPageDemand.call(_this, {
 					getDataFn: getTabList, //获取数据的方法
 					successEnd() {
-						
-						_this.$refs.QSVirtualList.setData(_this.list)
-						// _this.QSLAZYLOAD_update(_this.list.length);
 						if (refresh) _this.$emit('refreshEnd', true);
 					},
 					fail() {
@@ -140,14 +126,11 @@
 					refreshClear: false, //刷新时是否清空数据
 				})
 			},
-			parentScroll(scrollTop) {	//来自父级模板的scroll滚动事件
-				this.$refs.QSVirtualList.setScroll(scrollTop);
-			},
-			itemClick(ind) {
+			/* itemClick(ind) {
 				uni.showToast({
 					title: `第${this.index}列 第${ind}项`
 				})
-			}
+			} */
 		}
 	}
 </script>

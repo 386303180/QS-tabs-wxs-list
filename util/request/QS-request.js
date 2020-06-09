@@ -112,7 +112,7 @@ function request(obj) {
 				config.header['Content-type'] = 'application/x-www-form-urlencoded'
 			}
 			if (!obj.method) {
-				obj.method = 'POST'
+				obj.method = 'GET'
 			}
 			_app.log(
 				`访问接口 url: ${obj.url}, data: ${JSON.stringify(obj.data)}, method: ${obj.method}, header: ${JSON.stringify(config.header)}`
