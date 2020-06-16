@@ -85,6 +85,7 @@ function getData(data, pno, psize) {
 	let endIndex = startIndex + psize - 1;
 	endIndex = endIndex > size - 1 ? size : endIndex;
 	let d = data.slice(startIndex, endIndex + 1);
+	d = JSON.parse(JSON.stringify(d));
 	page.list = d;
 	obj.page = page;
 	return obj;

@@ -1,5 +1,5 @@
 
-var tabsInfo = [];
+var tabsInfos = {};
 
 function log(t) {
 	// console.log(t);
@@ -14,6 +14,8 @@ function transition(e, ins) {
 	log('dataset:' + JSON.stringify(dataset));
 	var current = parseInt(dataset.current) || 0;
 	log('current:' + current);
+	var componentId = dataset.componentid;
+	var tabsInfo = tabsInfos[componentId];
 	var tab = tabsInfo[current];
 	tab = str2Obj(tab, ',');
 	if(tab) {
@@ -56,9 +58,10 @@ function transition(e, ins) {
 }
 
 function tabsInfoChange(n, o, ins) {
-	tabsInfo = n
 	var swiper = ins.selectComponent('#swiper');
 	var dataset = swiper.getDataset();
+	var componentId = dataset.componentid;
+	tabsInfos[componentId] = n
 	var tabsInfoChangeBl = dataset.tabsinfochangebl;
 	if(tabsInfoChangeBl === 'true' || tabsInfoChangeBl === true){
 		ins.callMethod('setTabsInfoChangeBl');
@@ -88,6 +91,8 @@ function setCurDx(ins, current, tabsChange, changeLineDx) {
 	log('dataset:' + JSON.stringify(dataset));
 	var line = ins.selectComponent('#line');
 	var current = parseInt(current!==false?current:(dataset.current || 0));
+	var componentId = dataset.componentid;
+	var tabsInfo = tabsInfos[componentId];
 	var tab = tabsInfo[current];
 	tab = str2Obj(tab, ',');
 	log('tab:' + JSON.stringify(tab));

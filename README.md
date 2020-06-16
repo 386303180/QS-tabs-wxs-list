@@ -13,11 +13,10 @@
 ### [示例项目结构](#project-structure)
 ### [支持度](#support)
 ### [使用须知](#notice-for-use)
-### [传入参数](#props)
+### [Attributes](#Attributes)
 ### [config.js(v2.3+)](#config)
-### [事件](#events)
-### [ref调用函数](#refs)
-### [传入参数](#props)
+### [Events](#events)
+### [Methods](#Methods)
 ### [使用步骤](#use-steps)
 ### [分页加载概述](#pageDemand)
 ### [组件结构图](#jg)
@@ -100,7 +99,7 @@ document.body.addEventListener('touchmove', function (e) {
 // #endif
 ```
 
-# <span id="props">传入参数</span>
+# <span id="Attributes">Attributes</span>
 ```
 	tabsPosition: {	//tabs位置 top: 上, bottom: 下
 		type: String,
@@ -134,7 +133,7 @@ document.body.addEventListener('touchmove', function (e) {
 		type: String,
 		default: '#f1505c'
 	},
-	lineMarginBottom: { //线条距离底部距离(需要加单位)
+	lineMarginBottom: { //线条距离底部距离
 		type: [Number, String],
 		default: 0
 	},
@@ -245,6 +244,10 @@ document.body.addEventListener('touchmove', function (e) {
 	contentMode: {	//content展示模式, default、swiper、vShow, 若传default, 则会根据config.js中的checkContentMode返回相应模式, 安卓平台下传default或swiper都会经过checkContentMode的检测
 		type: String,
 		default: 'default'
+	},
+	customData: {	//自定义数据，最终传至列表vue中 v2.9+
+		type: [Object, String, Number, Array, Boolean],
+		default: ()=>{ return {} }
 	}
 ```
 
@@ -256,17 +259,19 @@ document.body.addEventListener('touchmove', function (e) {
 | checkContentMode| | 安卓平台下, 当contentMode为default或swiper时, 进一步判断当前机型性能是否可以开启swiper模式|
 | checkvShowDuration| | (当前平台不支持wxs时)安卓平台下, 当contentMode最终为vShow时, 进一步配置当前机型的下拉刷新过渡时间值|
 
-# <span id="events">事件</span>
+# <span id="Events">事件</span>
 | 事件名称| 形参| 说明|
 |------|------|------|------|
+| change `v2.9+`| current| 内部current改变时触发|
 | disabledTap| | 组件disabled为true时，组件区域点击时触发|
 | disabledTouchmove| | 组件disabled为true时，组件区域滑动时触发|
 
-# <span id="refs">ref调用函数</span>
+# <span id="Methods">Methods</span>
 | 方法名| 返回值| 传入参数| 说明|
 |------|------|------|------|
 | setTabs| | tabs 详见[tabs参数详解](#tabs)| 设置tabs|
 | setDisabled| | Boolean| 设置组件是否可以被点击和滑动|
+| setCustomData `v2.9+`| | Object/Array/String/Number| 设置自定义数据, 该数据可在list vue中获取|
 
 # <span id="tabs">tabs参数详解</span>
 * ### 注: tabs由组件ref实例调用setTabs方法设置
@@ -392,18 +397,18 @@ export default {
 首先，该组件的对接分为两部分`视图`和`数据`<br />
 ### 视图
 我们先来看`视图`部分:<br />
-该组件的列表样式(或者说视图)是集中放在一个"池子"里面的, 位于 组件文件夹/components/components, 该文件夹下存放了列表的vue文件<br />
-而所有的列表vue文件都由 组件文件夹/components/QS-tabs-wxs-list-template.vue 来`分流`，所谓的`分流`就是不同的页面使用不同的模板，甚至是不同的列也是用不同的模板<br />
-因此你新创建的列表vue需要在模板分流组件内注册并由`type`属性控制不同的页面使用不同的列表模板<br />
-也有小伙伴的需求是`不同列`也需要不同的模板， 那么这时候就可以使用mixins混入的index(当前tab下标)或者自己再tab中设置的自定义id来区分不同的模板<br />
-SO `区分不同的列表模板`都是在 组件文件夹/components/`QS-tabs-wxs-list-template.vue` 这个文件进行的<br />
-而`列表的具体样式与数据的获取`是在 组件文件夹/components/components/xxx.vue 下进行<br /><br />
+该组件的列表样式(或者说视图)是集中放在一个"池子"里面的, 位于 `组件文件夹/components/components`, 该文件夹下存放了列表的vue文件.<br />
+而所有的列表vue文件都由 `组件文件夹/components/QS-tabs-wxs-list-template.vue` 来`分流`，所谓的`分流`就是不同的页面使用不同的模板，甚至是不同的列也是用不同的模板.<br />
+因此你新创建的列表vue需要在模板分流组件内注册并由`type`属性控制不同的页面使用不同的列表模板.<br />
+也有小伙伴的需求是`不同列`也需要不同的模板， 那么这时候就可以使用mixins混入的index(当前tab下标)或者自己再tab中设置的自定义id来区分不同的模板.<br />
+SO `区分不同的列表模板`都是在 组件文件夹/components/`QS-tabs-wxs-list-template.vue` 这个文件进行的.<br />
+而`列表的具体样式与数据的获取`是在 `组件文件夹/components/components/xxx.vue` 下进行.<br />
 ### 数据
 我们接着来看数据部分的对接:<br />
-该组件在示例中已经实现了从`访问接口`到`过滤数据`再到`分页数据`的封装<br />
-首先在示例项目根目录有一个`util`文件夹, 在里面我们放了request文件夹和获取列表数据的api js文件(getTabList.js 其实我们大可以把这里面的api整合在一个公共的apis.js里面)<br />
-getTabList.js中import './request/QS-request.js',  QS-request.js导出对象中的QSRequest就是对uni.request的封装<br />
-`!!注意`:QSRequest为了便于示例演示在其内使用的是mock方法， 并没有直接使用uni.request, 所以在正式使用时请删除使用mock的逻辑<br />
+该组件在示例中已经实现了从`访问接口`到`过滤数据`再到`分页数据`的封装.<br />
+首先在示例项目根目录有一个`util`文件夹, 在里面我们放了request文件夹和获取列表数据的api js文件(getTabList.js 其实我们大可以把这里面的api整合在一个公共的apis.js里面).<br />
+getTabList.js中`import './request/QS-request.js'`,  QS-request.js导出对象中的QSRequest就是对uni.request的封装.<br />
+`!!注意`:QSRequest为了便于示例演示在其内使用的是mock方法， 并没有直接使用uni.request, 所以在正式使用时请删除使用mock的逻辑.<br />
 那么QSRequest传入的参数是:<br />
 ```
 {
@@ -417,14 +422,14 @@ getTabList.js中import './request/QS-request.js',  QS-request.js导出对象中�
 	...//其实可以自己增加一些逻辑 像我自己增加了 login属性， 判断若未登录则跳转登录页面或者提示未登录，还有promiseProxyFn，可以对返回数据做一次异步的代理
 }
 ```
-QSRequest 接收上面的对象后会返回一个经过一系列处理的Promise对象， 所以在getTabList.js中是直接return了一个QSRequest所返回的Promise对象，而外部可以使用then方法或者 async await的方式获取数据<br />
+QSRequest 接收上面的对象后会返回一个经过一系列处理的Promise对象， 所以在getTabList.js中是直接return了一个QSRequest所返回的Promise对象，而外部可以使用then方法或者 async await的方式获取数据.<br />
 到这里我们已经讲了`访问接口`到`过滤数据`的过程, 那么在`分页数据`之前，我们需要做的是如下几点:<br />
 * ### 1.删除mock逻辑(源码大概在QS-request.js 20-24行左右， 即是fn等于request方法即可)
-* ### 2.在util/interface.js中写好接口地址以便使用QSRequest中的urlField属性来获取
+* ### 2.在`util/interface.js`中写好接口地址以便使用QSRequest中的urlField属性来获取
 * ### 3.因为QSRequest默认会对返回数据做一次健壮性判断，所以你应该修改QS-request.js中的checkRes方法来符合自己的业务需求
-假如我们已经把上面的问题都搞定了，那么geTabList.js这个api在外部调用时返回的应该就是我们想要的数据了, 那么我们接下来看`分页数据`<br />
-分页数据的js位于 组件文件夹/js/pageDemand.js, 该js文件是一个分页公共逻辑的封装，注意 抽离出的时公共的逻辑, 所以外部调用就是用Function.prototype.call方法来使用, 因为call方法能改变this指向, 所以我们只要在每个list的实例中使用call方法使用它，它this所指向的都是这个list vue的实例<br />
-我们所说的list vue实例 其实指的就是列表样式池(组件文件夹/components/components)里的vue文件, 那么我们看看示例代码: <br />
+假如我们已经把上面的问题都搞定了，那么geTabList.js这个api在外部调用时返回的应该就是我们想要的数据了, 那么我们接下来看`分页数据`.<br />
+分页数据的js位于 `组件文件夹/js/pageDemand.js`, 该js文件是一个分页公共逻辑的封装，注意 抽离出的时公共的逻辑, 所以外部调用就是用Function.prototype.call方法来使用, 因为call方法能改变this指向, 所以我们只要在每个list的实例中使用call方法使用它，它this所指向的都是这个list vue的实例.<br />
+我们所说的list vue实例 其实指的就是列表样式池(`组件文件夹/components/components`)里的vue文件, 那么我们看看示例代码: <br />
 ```
 import { getTabList } from '@/util/getTabList.js';	//引入获取列表数据的api 就是我们前面说的 getTabList.js
 import { doPageDemand } from '../../js/pageDemand.js';	//引入分页js
@@ -477,7 +482,7 @@ data() {
 	}
 }
 ```
-好了， 讲到这里应该就差不多了， 如果还有不明白的......请加QQ群
+好了， 讲到这里应该就差不多了， 如果还有不明白的......请加QQ群.
 
 
 

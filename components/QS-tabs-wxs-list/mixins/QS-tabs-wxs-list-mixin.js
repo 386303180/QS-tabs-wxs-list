@@ -30,6 +30,10 @@ function QSTabsWxsListMixin() {
 			refreshDistance: {
 				type: Number,
 				default: 0
+			},
+			customData: {
+				type: [Object, String, Number, Array, Boolean],
+				default: ()=>{ return {} }
 			}
 		},
 		data() {

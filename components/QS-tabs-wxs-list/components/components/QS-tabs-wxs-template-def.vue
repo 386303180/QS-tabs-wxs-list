@@ -3,7 +3,7 @@
 	<!-- 为性能缘故, 当tab项多时, 请尽量不要删除 v-if="show" -->
 	
 	<view v-if="show">
-		<QSMasonry :list="list" padding="0"></QSMasonry>
+		<QSMasonry :list="list" hasImage padding="0" @updated="updated"></QSMasonry>
 		<!-- 列表状态展示 -->
 		<view class="statusText" @tap="getList(false, true, false)" :style="{
 			'color': getColor
@@ -53,6 +53,10 @@
 			refreshDistance: {
 				type: Number,
 				default: 0
+			},
+			customData: {	//由最外部传入的自定义数据
+				type: [Object, String, Number, Array, Boolean],
+				default: ()=>{ return {} }
 			}
 		},
 		data() {
@@ -126,6 +130,9 @@
 					refreshClear: false, //刷新时是否清空数据
 				})
 			},
+			updated() {
+				this.$emit('toOldScrollTop');
+			}
 			/* itemClick(ind) {
 				uni.showToast({
 					title: `第${this.index}列 第${ind}项`

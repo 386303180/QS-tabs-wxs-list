@@ -3,7 +3,7 @@
 		<!-- <view class="image-box">
 			<image src="/static/logo.png" mode="aspectFill" class="image"></image>
 		</view> -->
-		<image :src="listItem.img" mode="widthFix" class="img"></image>
+		<image :src="listItem.img" mode="widthFix" class="img" @load="imgLoaded" @error="imgLoaded"></image>
 		<text class="text">{{listItem.text}}</text>
 	</view>
 </template>
@@ -27,6 +27,9 @@
 					icon: 'none',
 					position: 'center'
 				})
+			},
+			imgLoaded() {
+				this.$emit('imgLoaded')
 			}
 		}
 	}

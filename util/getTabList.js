@@ -1,6 +1,5 @@
 import { QSRequest } from '@/util/request/QS-request.js';
 function getTabList(data = {}) {
-	console.log('getTabList: data:' + JSON.stringify(data))
 	return QSRequest({
 		urlField: 'testUrlList.testUrl',
 		sendData: {

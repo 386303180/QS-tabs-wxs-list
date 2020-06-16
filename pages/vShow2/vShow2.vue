@@ -21,6 +21,7 @@
 		swiperBackgroundColor="#000" 
 		minWidth="125rpx" 
 		type="setColor"
+		@change="change"
 		:height="windowHeight-topViewHeight"></QSTabsWxs>
 	</view>
 </template>
@@ -62,6 +63,9 @@
 			},
 			back() {
 				uni.navigateBack();
+			},
+			change(index) {
+				console.log('current改变:' + index)
 			}
 		}
 	}

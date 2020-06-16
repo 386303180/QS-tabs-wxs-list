@@ -139,9 +139,13 @@ var publicProps = {
 		type: [Boolean, String],
 		default: true
 	},
-	contentMode: {	//content展示模式
+	contentMode: {	//content展示模式, default、swiper、vShow, 若传default, 则会根据config.js中的checkContentMode返回相应模式, 安卓平台下传default或swiper都会经过checkContentMode的检测
 		type: String,
 		default: 'default'
+	},
+	customData: {	//自定义数据，最终传至列表vue中
+		type: [Object, String, Number, Array, Boolean],
+		default: ()=>{ return {} }
 	}
 }
 

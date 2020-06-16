@@ -20,7 +20,8 @@
 				<block v-else>
 					<view class="width100">
 						<defTemplate ref="component" :tab="tab" :index="index" :current="current" :type="type" :show="getShow"
-						 :readyRefresh="readyRefresh" @refreshEnd="refreshEnd" :refreshDistance="refreshDistance"></defTemplate>
+						 :readyRefresh="readyRefresh" @refreshEnd="refreshEnd" 
+						 @toOldScrollTop="toOldScrollTop" :refreshDistance="refreshDistance" :customData="customData"></defTemplate>
 					</view>
 				</block>
 			</view>

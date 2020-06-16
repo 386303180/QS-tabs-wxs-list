@@ -60,22 +60,11 @@
 				<!-- #ifdef APP-PLUS || MP-WEIXIN || H5 || MP-QQ -->
 				<!-- 下拉刷新 -->
 				<block v-if="nContentMode === 'swiper' && String(hasRefresh) === 'true'">
-					<view 
-					class="refresh-container" 
-					id="refresh-container" 
-					@touchstart="QSREFRESHWXS.touchstart" 
-					@touchmove="QSREFRESHWXS.touchmove"
-					 @touchend="QSREFRESHWXS.touchend" 
-					 @touchcancel="QSREFRESHWXS.touchend" 
-					 :refreshstatus="refreshStatus" 
-					 :refreshdistance="refreshDistance" 
-					 :readyrefresh="readyRefresh"
-					 :refreshshow="refreshShow" 
-					 :curreadyrefresh="curReadyRefresh"
-					 :change:refreshstatus="QSREFRESHWXS.refreshStatusChange"
-					 :change:refreshshow="QSREFRESHWXS.refreshShowChange"
-					 :change:readyrefresh="QSREFRESHWXS.readyRefreshChange" 
-					 :change:refreshdistance="QSREFRESHWXS.refreshDistanceChange"
+					<view class="refresh-container" id="refresh-container" @touchstart="QSREFRESHWXS.touchstart" @touchmove="QSREFRESHWXS.touchmove"
+					 @touchend="QSREFRESHWXS.touchend" @touchcancel="QSREFRESHWXS.touchend" :refreshstatus="refreshStatus"
+					 :refreshdistance="refreshDistance" :readyrefresh="readyRefresh" :refreshshow="refreshShow" :curreadyrefresh="curReadyRefresh"
+					 :change:refreshstatus="QSREFRESHWXS.refreshStatusChange" :change:refreshshow="QSREFRESHWXS.refreshShowChange"
+					 :change:readyrefresh="QSREFRESHWXS.readyRefreshChange" :change:refreshdistance="QSREFRESHWXS.refreshDistanceChange"
 					 :change:curreadyrefresh="QSREFRESHWXS.curReadyRefreshChange">
 						<view class="refresh-image-container" :style="{ 
 							'height': refreshDistance + 'px'
@@ -91,24 +80,17 @@
 						}" :current="getSwiperCurrent"
 						 @transition="QSTABSWXS.transition" :change:tabsInfo="QSTABSWXS.tabsInfoChange" :tabsInfo="tabsInfo"
 						 :data-tabsinfo="tabsInfo" :data-current="getCurrent" :data-windowwidth="windowWidth" :data-linewidth="lineWidth"
-						 :data-scrollleft="scrollLeft" :data-tabsinfochangebl="tabsInfoChangeBl" @change="QSTABSWXS.swiperChange"
+						 :data-scrollleft="scrollLeft" :data-tabsinfochangebl="tabsInfoChangeBl" :data-componentid="componentId" @change="QSTABSWXS.swiperChange"
 						 @animationfinish="QSTABSWXS.animationfinish">
 							<swiper-item v-for="(item, index) in tabs" :key="index" class="swiper-item" :style="{
 								'background-color': item.swiperItemBackgroundColor || 'rgba(255,255,255,0)'
 							}">
-								<QSTabsListTemplate 
-								:ref="refPre" 
-								:readyRefresh="getCurrent===index?Boolean(readyRefresh):false" :show="readyRefresh?
+								<QSTabsListTemplate :ref="refPre" :readyRefresh="getCurrent===index?Boolean(readyRefresh):false" :show="readyRefresh?
 									(getCurrent===index):
 									(((index-getCurrent)<=1 && (index-getCurrent)>=-1)?
 									true:false)"
-								:type="type" 
-								:current="getCurrent" 
-								:tab="item" 
-								:index="index"
-								@refreshEnd="setRefreshStatus" 
-								@scrollFn="scrollFn"
-								:refreshDistance="Number(refreshDistance)"></QSTabsListTemplate>
+								 :type="type" :current="getCurrent" :tab="item" :index="index" @refreshEnd="setRefreshStatus" @scrollFn="scrollFn"
+								 :refreshDistance="Number(refreshDistance)" :customData="nCustomData"></QSTabsListTemplate>
 							</swiper-item>
 						</swiper>
 					</view>
@@ -120,7 +102,7 @@
 				}" :current="getSwiperCurrent"
 					 @transition="QSTABSWXS.transition" :change:tabsInfo="QSTABSWXS.tabsInfoChange" :tabsInfo="tabsInfo"
 					 :data-tabsinfo="tabsInfo" :data-current="getCurrent" :data-windowwidth="windowWidth" :data-linewidth="lineWidth"
-					 :data-scrollleft="scrollLeft" :data-tabsinfochangebl="tabsInfoChangeBl" @change="QSTABSWXS.swiperChange"
+					 :data-scrollleft="scrollLeft" :data-tabsinfochangebl="tabsInfoChangeBl" :data-componentid="componentId" @change="QSTABSWXS.swiperChange"
 					 @animationfinish="QSTABSWXS.animationfinish">
 						<swiper-item v-for="(item, index) in tabs" :key="index" class="swiper-item" :style="{
 						'background-color': item.swiperItemBackgroundColor || 'rgba(255,255,255,0)'
@@ -129,7 +111,8 @@
 							(getCurrent===index):
 							(((index-getCurrent)<=1 && (index-getCurrent)>=-1)?
 							true:false)"
-							 :type="type" :current="getCurrent" :tab="item" :index="index" @refreshEnd="setRefreshStatus" @scrollFn="scrollFn"></QSTabsListTemplate>
+							 :type="type" :current="getCurrent" :tab="item" :index="index" 
+							 @refreshEnd="setRefreshStatus" @scrollFn="scrollFn" :customData="nCustomData"></QSTabsListTemplate>
 						</swiper-item>
 					</swiper>
 				</block>
@@ -140,20 +123,11 @@
 				<!-- 有下拉刷新 -->
 				<block v-if="String(hasRefresh) === 'true'">
 					<!-- #ifdef APP-PLUS || MP-WEIXIN || H5 || MP-QQ -->
-					<view class="refresh-container" id="refresh-container" 
-					@touchstart="QSREFRESHWXS.touchstart" 
-					@touchmove="QSREFRESHWXS.touchmove"
-					 @touchend="QSREFRESHWXS.touchend" 
-					 @touchcancel="QSREFRESHWXS.touchend" 
-					 :refreshdistance="refreshDistance" 
-					 :readyrefresh="readyRefresh"
-					 :refreshshow="refreshShow" 
-					 :refreshstatus="refreshStatus" 
-					 :curreadyrefresh="curReadyRefresh"
-					 :change:refreshstatus="QSREFRESHWXS.refreshStatusChange"
-					 :change:refreshshow="QSREFRESHWXS.refreshShowChange"
-					 :change:readyrefresh="QSREFRESHWXS.readyRefreshChange" 
-					 :change:refreshdistance="QSREFRESHWXS.refreshDistanceChange"
+					<view class="refresh-container" id="refresh-container" @touchstart="QSREFRESHWXS.touchstart" @touchmove="QSREFRESHWXS.touchmove"
+					 @touchend="QSREFRESHWXS.touchend" @touchcancel="QSREFRESHWXS.touchend" :refreshdistance="refreshDistance"
+					 :readyrefresh="readyRefresh" :refreshshow="refreshShow" :refreshstatus="refreshStatus" :curreadyrefresh="curReadyRefresh"
+					 :change:refreshstatus="QSREFRESHWXS.refreshStatusChange" :change:refreshshow="QSREFRESHWXS.refreshShowChange"
+					 :change:readyrefresh="QSREFRESHWXS.readyRefreshChange" :change:refreshdistance="QSREFRESHWXS.refreshDistanceChange"
 					 :change:curreadyrefresh="QSREFRESHWXS.curReadyRefreshChange">
 						<view class="refresh-image-container" :style="{ 
 							'height': refreshDistance + 'px'
@@ -174,24 +148,25 @@
 							}">
 								<QSTabsListTemplate :ref="refPre" :readyRefresh="getCurrent===index?readyRefresh:false" :show="getCurrent===index"
 								 :type="type" :current="getCurrent" :tab="item" :index="index" @refreshEnd="setRefreshStatus" @scrollFn="scrollFn"
-								:refreshDistance="Number(refreshDistance)"></QSTabsListTemplate>
+								 :refreshDistance="Number(refreshDistance)" :customData="nCustomData"></QSTabsListTemplate>
 							</view>
 						</view>
 					</view>
 					<!-- #endif -->
 					<!-- #ifndef APP-PLUS || MP-WEIXIN || H5 || MP-QQ -->
-					<view class="refresh-container" id="refresh-container" :animation="refresh_animationData" @touchstart="_vShow_touchstart" @touchmove="_vShow_touchmove"
-					 @touchend="_vShow_touchend" @touchcancel="_vShow_touchend">
+					<view class="refresh-container" id="refresh-container" :animation="refresh_animationData" @touchstart="_vShow_touchstart"
+					 @touchmove="_vShow_touchmove" @touchend="_vShow_touchend" @touchcancel="_vShow_touchend">
 						<view class="refresh-image-container" :style="{ 
 							'height': refreshDistance + 'px'
 						}">
-							<image id="refreshImage" v-if="refreshImage" :src="refreshImage" :animation="refresh_img_animationData" mode="scaleToFill" class="refresh-image" :class="{'isRefreshing': isRefreshing}"></image>
+							<image id="refreshImage" v-if="refreshImage" :src="refreshImage" :animation="refresh_img_animationData" mode="scaleToFill"
+							 class="refresh-image" :class="{'isRefreshing': isRefreshing}"></image>
 							<view class="refreshText" :style="{
 								'font-size': refreshTextFontSize,
 								'color': refreshTextColor
 							}">{{refreshStatusText}}</view>
 						</view>
-						
+
 						<view class="vShowView" :style="{ 'height': getSwiperHieght + 'px' }">
 							<view class="vShow-item" v-for="(item, index) in tabs" :class="{
 								'vShow-active': getCurrent===index
@@ -201,7 +176,8 @@
 								'z-index': getCurrent===index?(Number(zIndex) + 3):(Number(zIndex) + 2)
 							}">
 								<QSTabsListTemplate :ref="refPre" :readyRefresh="getCurrent===index?readyRefresh:false" :show="getCurrent===index"
-								 :type="type" :current="getCurrent" :tab="item" :index="index" @refreshEnd="setRefreshStatus" @scrollFn="scrollFn"></QSTabsListTemplate>
+								 :type="type" :current="getCurrent" :tab="item" :index="index" 
+								 @refreshEnd="setRefreshStatus" @scrollFn="scrollFn" :customData="nCustomData"></QSTabsListTemplate>
 							</view>
 						</view>
 					</view>
@@ -218,7 +194,8 @@
 							'z-index': getCurrent===index?(Number(zIndex) + 3):(Number(zIndex) + 2)
 						}">
 							<QSTabsListTemplate :ref="refPre" :readyRefresh="getCurrent===index?readyRefresh:false" :show="getCurrent===index"
-							 :type="type" :current="getCurrent" :tab="item" :index="index" @refreshEnd="setRefreshStatus" @scrollFn="scrollFn"></QSTabsListTemplate>
+							 :type="type" :current="getCurrent" :tab="item" :index="index" 
+							 @refreshEnd="setRefreshStatus" @scrollFn="scrollFn" :customData="nCustomData"></QSTabsListTemplate>
 						</view>
 					</view>
 				</block>
@@ -314,6 +291,7 @@
 	import publicProps from './js/publicProps.js';
 	const Sys = uni.getSystemInfoSync();
 	console.log('系统信息: ' + JSON.stringify(Sys));
+	var QSComponentId = 0;
 	var vShow_touchstart = 0;
 	var vShow_touchmove = 0;
 	var vShow_touchend = true;
@@ -325,7 +303,7 @@
 	hasWxs = true;
 	// #endif
 	export default {
-		provide:{
+		provide: {
 			nRefreshInstance: 90
 		},
 		components: {
@@ -336,18 +314,18 @@
 			let nContentMode = 'vShow';
 			const isAndroid = Sys.platform.toLocaleLowerCase() === 'android';
 			// #ifdef APP-PLUS || MP-WEIXIN || H5 || MP-QQ
-			if(this.contentMode === 'default') {
-				if(isAndroid) {
+			if (this.contentMode === 'default') {
+				if (isAndroid) {
 					nContentMode = _app.checkContentMode(Sys) || 'vShow';
-				}else{
+				} else {
 					nContentMode = 'swiper';
 				}
-			}else{
-				switch (this.contentMode){
+			} else {
+				switch (this.contentMode) {
 					case 'swiper':
-						if(isAndroid) {
+						if (isAndroid) {
 							nContentMode = _app.checkContentMode(Sys) || 'vShow';
-						}else{
+						} else {
 							nContentMode = this.contentMode;
 						}
 						break;
@@ -360,16 +338,17 @@
 			// #ifndef APP-PLUS || MP-WEIXIN || H5 || MP-QQ
 			nContentMode = 'vShow';
 			// #endif
-			if(nContentMode === 'vShow'){
-				if(isAndroid) {
+			if (nContentMode === 'vShow') {
+				if (isAndroid) {
 					let dur = _app.checkvShowDuration(Sys);
-					dur = typeof dur === 'number'?dur:300;
+					dur = typeof dur === 'number' ? dur : 300;
 					vShowDefDuration = dur;
-				}else{
+				} else {
 					vShowDefDuration = 0;
 				}
 			}
 			return {
+				componentId: 'QSComponentId_' + QSComponentId++,
 				preId: 'QSTabsWxsID_',
 				refPre: 'QSTabsWxsRef',
 				tabs: [],
@@ -392,16 +371,18 @@
 				readyRefresh: false,
 				refreshShow: false,
 				nContentMode,
-				
+
 				refresh_Ani: null,
 				refresh_animationData: {},
-				
+
 				refresh_img_Ani: null,
 				refresh_img_animationData: {},
-				
+
 				scrollFn_timeout: null,
+
+				curReadyRefresh: true,
 				
-				curReadyRefresh: true
+				nCustomData: this.customData
 			}
 		},
 		computed: {
@@ -412,14 +393,19 @@
 				return this.swiperCurrent > this.tabs.length ? this.tabs.length : this.swiperCurrent;
 			},
 			getSwiperHieght() {
-				return this.height?(Number(this.height) - Number(this.tabsHeight)):Sys.windowHeight;
+				return this.height ? (Number(this.height) - Number(this.tabsHeight)) : Sys.windowHeight;
 			},
 			isVShowAndNotWxs() {
 				return this.nContentMode === 'vShow' && !hasWxs;
 			}
 		},
+		watch: {
+			customData(newValue) {
+				this.setCustomData(newValue);
+			}
+		},
 		created() {
-			if(this.nContentMode === 'vShow' && !hasWxs) {
+			if (this.nContentMode === 'vShow' && !hasWxs) {
 				this.refresh_Ani = uni.createAnimation({
 					duration: vShowDefDuration
 				});
@@ -429,78 +415,89 @@
 			}
 		},
 		methods: {
+			setCustomData(customData) {
+				this.nCustomData = customData;
+			},
 			_vShow_touchstart(e) {
 				vShow_touchend = false;
 				start_scrollFn_timeout_fn = false;
-				if(this.tabs_copy[this.getCurrent].readyRefresh && !this.isRefreshing) {
+				if (this.tabs_copy[this.getCurrent].readyRefresh && !this.isRefreshing) {
 					vShow_touchstart = e.touches[0].clientY;
 				}
 			},
 			_vShow_touchmove(e) {
-				if(e.touches.length > 1) return;
-				if(this.tabs_copy[this.getCurrent].readyRefresh && !this.isRefreshing) {
+				if (e.touches.length > 1) return;
+				if (this.tabs_copy[this.getCurrent].readyRefresh && !this.isRefreshing) {
 					vShow_touchmove = e.touches[0].clientY;
 					let distance = e.touches[0].clientY - vShow_touchstart;
-					distance = distance>=0?distance:0;
-					this._vShow_setRefreshY(distance*.5);
-					this._vShow_setRefreshImage_r(distance*10);
-					
-					if(distance > this.refreshDistance/0.5) {
+					distance = distance >= 0 ? distance : 0;
+					this._vShow_setRefreshY(distance * .5);
+					this._vShow_setRefreshImage_r(distance * 10);
+
+					if (distance > this.refreshDistance / 0.5) {
 						this.setRefreshStatus(2);
-					}else{
+					} else {
 						this.setRefreshStatus(1);
 					}
 				}
 			},
 			_vShow_touchend(e) {
 				vShow_touchend = true;
-				if(this.tabs_copy[this.getCurrent].readyRefresh && !this.isRefreshing) {
-					if(vShow_touchmove - vShow_touchstart > this.refreshDistance/0.5) {
-						this._vShow_setRefreshY(this.refreshDistance, { duration: 300 });
-					}else{
-						this._vShow_setRefreshY(0, { duration: 300 });
-						this._vShow_setRefreshImage_r(0, { duration: 300 });
+				if (this.tabs_copy[this.getCurrent].readyRefresh && !this.isRefreshing) {
+					if (vShow_touchmove - vShow_touchstart > this.refreshDistance / 0.5) {
+						this._vShow_setRefreshY(this.refreshDistance, {
+							duration: 300
+						});
+					} else {
+						this._vShow_setRefreshY(0, {
+							duration: 300
+						});
+						this._vShow_setRefreshImage_r(0, {
+							duration: 300
+						});
 					}
-					
-					if(this.refreshStatus === 2) {
+
+					if (this.refreshStatus === 2) {
 						this.setRefreshStatus(3);
 					}
 				}
-				if(!start_scrollFn_timeout_fn) {
+				if (!start_scrollFn_timeout_fn) {
 					start_scrollFn_timeout_fn = true;
 					this.scrollFn_timeout = setTimeout(this.scrollFn_timeout_fn, 100)
 				}
 			},
 			scrollFn(obj) {
 				// console.log('scrollFn:' + obj.scrollTop);
-				if(this.scrollFn_timeout) clearTimeout(this.scrollFn_timeout)
+				if (this.scrollFn_timeout) clearTimeout(this.scrollFn_timeout)
 				scrollTopArr.push(obj);
 				this.tabs_copy[obj.index].scrollTop = obj.scrollTop;
-				if(vShow_touchend) {
+				if (vShow_touchend) {
 					start_scrollFn_timeout_fn = true;
 					this.scrollFn_timeout = setTimeout(this.scrollFn_timeout_fn, 100)
 				}
 			},
 			scrollFn_timeout_fn() {
 				// console.log(scrollTopArr.length);
-				if(scrollTopArr.length > 0) {
+				if (scrollTopArr.length > 0) {
 					const end = scrollTopArr.length - 1;
-					if(scrollTopArr[end].scrollTop < 15) {
+					if (scrollTopArr[end].scrollTop < 15) {
 						this.tabs_copy[this.getCurrent].readyRefresh = true;
-					}else{
-						if(scrollTopArr.length > 1) {
-							const meanValue = (Math.abs(scrollTopArr[scrollTopArr.length - 1].scrollTop - scrollTopArr[0].scrollTop))/scrollTopArr.length;
-							if(scrollTopArr[scrollTopArr.length - 2].scrollTop > scrollTopArr[scrollTopArr.length - 1].scrollTop) {
-								this.tabs_copy[this.getCurrent].readyRefresh = (scrollTopArr[scrollTopArr.length - 2].scrollTop - scrollTopArr[scrollTopArr.length - 1].scrollTop) > scrollTopArr[scrollTopArr.length - 1].scrollTop;
-							}else{
+					} else {
+						if (scrollTopArr.length > 1) {
+							const meanValue = (Math.abs(scrollTopArr[scrollTopArr.length - 1].scrollTop - scrollTopArr[0].scrollTop)) /
+								scrollTopArr.length;
+							if (scrollTopArr[scrollTopArr.length - 2].scrollTop > scrollTopArr[scrollTopArr.length - 1].scrollTop) {
+								this.tabs_copy[this.getCurrent].readyRefresh = (scrollTopArr[scrollTopArr.length - 2].scrollTop - scrollTopArr[
+									scrollTopArr.length - 1].scrollTop) > scrollTopArr[scrollTopArr.length - 1].scrollTop;
+							} else {
 								this.tabs_copy[this.getCurrent].readyRefresh = false;
 							}
-						}else{
+						} else {
 							this.tabs_copy[this.getCurrent].readyRefresh = scrollTopArr[scrollTopArr.length - 1].scrollTop < 15;
 						}
 					}
 				}
-				if(this.tabs_copy[this.getCurrent].readyRefresh !== this.curReadyRefresh) {
+				if (this.tabs_copy[this.getCurrent].readyRefresh !== this.curReadyRefresh) {
 					this.curReadyRefresh = this.tabs_copy[this.getCurrent].readyRefresh;
 				}
 				scrollTopArr = [];
@@ -528,20 +525,22 @@
 						break;
 					case 4:
 						this.refreshStatusText = this.successRefreshText;
-						if(this.isVShowAndNotWxs) {
+						if (this.isVShowAndNotWxs) {
 							this.setRefreshStatus(6);
 						}
 						break;
 					case 5:
 						this.refreshStatusText = this.failRefreshText;
-						if(this.isVShowAndNotWxs) {
+						if (this.isVShowAndNotWxs) {
 							this.setRefreshStatus(6);
 						}
 						break;
 					case 6:
 						setTimeout(() => {
-							if(this.isVShowAndNotWxs) {
-								this._vShow_setRefreshY(0, { duration: 300 });
+							if (this.isVShowAndNotWxs) {
+								this._vShow_setRefreshY(0, {
+									duration: 300
+								});
 							}
 							this.setRefreshStatus(1);
 							this.isRefreshing = false;
@@ -574,21 +573,21 @@
 				this.wxsLineWidth = lineWidth;
 			},
 			getTabsHeight() {
-				try{
+				try {
 					let view = uni.createSelectorQuery().in(this);
 					view.select('.tabs-container').boundingClientRect();
 					view.exec(res => {
 						_app.log('tabs高度:' + JSON.stringify(res));
 						this.tabsHeight = res[0].height;
 					})
-				}catch(e){
+				} catch (e) {
 					//TODO handle the exception
 					this.tabsHeight = 44;
 					console.log('获取tabs高度异常:' + JSON.stringify(e))
 				}
 			},
 			getTabsInfo(returnPromise) {
-				try{
+				try {
 					let view = uni.createSelectorQuery().in(this);
 					let scroll = uni.createSelectorQuery().in(this);
 					scroll.select('#tabs-scroll').fields({
@@ -629,7 +628,7 @@
 					})
 
 					setTimeout(fn, 0)
-				}catch(e){
+				} catch (e) {
 					//TODO handle the exception
 					console.log('获取布局信息异常:' + JSON.stringify(e))
 				}
@@ -646,7 +645,7 @@
 							const defCurrent = this._getDefCurrent();
 							_app.log('defCurrent:' + defCurrent);
 							this.swiperCurrent = defCurrent;
-							if(this.nContentMode === 'vShow') {
+							if (this.nContentMode === 'vShow') {
 								this.current = defCurrent;
 							}
 							this.setHasRefreshContainerBackgroundColor(defCurrent);
@@ -671,7 +670,12 @@
 				}
 			},
 			setTabsCopy() {
-				this.tabs_copy = this.tabs.map(item=>{ return { scrollTop: 0, readyRefresh: true } });
+				this.tabs_copy = this.tabs.map(item => {
+					return {
+						scrollTop: 0,
+						readyRefresh: true
+					}
+				});
 			},
 			setHasRefreshContainerBackgroundColor(index) {
 				const tab = this.tabs[index];
@@ -687,7 +691,7 @@
 				refresh
 			} = {}) {
 				try {
-					if(refresh === false) return;
+					if (refresh === false) return;
 					index = index !== undefined ? index : this.current;
 					if (!refresh) {
 						const bl_status = this.initStatus[index] === true;
@@ -698,17 +702,17 @@
 					}
 
 					const refs = this.$refs[this.refPre];
-					if(!refs) {
+					if (!refs) {
 						console.log('not find refs');
 						return;
 					}
 					const ref = refs[index];
-					if(!ref) {
+					if (!ref) {
 						console.log('not find ref');
 						return;
 					}
 					const initFn = ref[this.initFnName];
-					if(!initFn || typeof initFn !== 'function') {
+					if (!initFn || typeof initFn !== 'function') {
 						console.log('not find init function');
 						return;
 					}
@@ -727,7 +731,7 @@
 			},
 			setCurrent(obj) { //由wxs内部触发animationinish事件
 				const current = Number(obj.current);
-				if(this.tabs_copy[current].readyRefresh !== this.curReadyRefresh) this.curReadyRefresh = this.tabs_copy[current].readyRefresh;
+				if (this.tabs_copy[current].readyRefresh !== this.curReadyRefresh) this.curReadyRefresh = this.tabs_copy[current].readyRefresh;
 				if (this.swiperCurrent !== current) {
 					this.swiperCurrent = current;
 				}
@@ -735,6 +739,7 @@
 					this.setNdisabled(true);
 					const time = this.initStatus[current] === true ? 100 : 500;
 					this.current = current;
+					this.$emit('change', this.current);
 					this._doInit({
 						index: current,
 						slide: true
@@ -766,10 +771,11 @@
 						break;
 					case 'vShow':
 						this.swiperCurrent = index;
-						if(this.current === index) {
+						if (this.current === index) {
 							refresh = false
 						}
 						this.current = index;
+						this.$emit('change', this.current);
 						break;
 				}
 				this._doInit({
