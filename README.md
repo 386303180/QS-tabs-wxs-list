@@ -15,7 +15,7 @@
 ### [使用须知](#notice-for-use)
 ### [Attributes](#Attributes)
 ### [config.js(v2.3+)](#config)
-### [Events](#events)
+### [Events](#Events)
 ### [Methods](#Methods)
 ### [使用步骤](#use-steps)
 ### [分页加载概述](#pageDemand)
@@ -259,7 +259,7 @@ document.body.addEventListener('touchmove', function (e) {
 | checkContentMode| | 安卓平台下, 当contentMode为default或swiper时, 进一步判断当前机型性能是否可以开启swiper模式|
 | checkvShowDuration| | (当前平台不支持wxs时)安卓平台下, 当contentMode最终为vShow时, 进一步配置当前机型的下拉刷新过渡时间值|
 
-# <span id="Events">事件</span>
+# <span id="Events">Events</span>
 | 事件名称| 形参| 说明|
 |------|------|------|------|
 | change `v2.9+`| current| 内部current改变时触发|
@@ -271,7 +271,7 @@ document.body.addEventListener('touchmove', function (e) {
 |------|------|------|------|
 | setTabs| | tabs 详见[tabs参数详解](#tabs)| 设置tabs|
 | setDisabled| | Boolean| 设置组件是否可以被点击和滑动|
-| setCustomData `v2.9+`| | Object/Array/String/Number| 设置自定义数据, 该数据可在list vue中获取|
+| setCustomData `v2.9+`| | Object/Array/String/Number/Boolean | 设置自定义数据, 该数据可在list vue中获取|
 
 # <span id="tabs">tabs参数详解</span>
 * ### 注: tabs由组件ref实例调用setTabs方法设置

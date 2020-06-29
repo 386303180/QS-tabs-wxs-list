@@ -1,38 +1,37 @@
-var startY = 0;
-var touchStatus = 0;
-var refreshStatus = 1;
-var refreshShow = false;
-var readyRefresh = false;
-var refreshDistance = 90;
-var currentReadyRefresh = true;
+var tabsInfosObj = {};
 
 var touchstart = function(e, ins) {
-	if(!currentReadyRefresh) return;
-	startY = e.touches[0].pageY;
+	const obj = getObj(ins);
+	
+	if(!obj.currentReadyRefresh) return;
+	
+	obj.startY = e.touches[0].pageY;
 	var refreshContianer = ins.selectComponent('#refresh-container');
-	if (refreshStatus === 1) {
+	if (obj.refreshStatus === 1) {
 		refreshContianer.setStyle({
 			'transition': '0s'
 		})
 	}
-	if(touchStatus!==0) touchStatus = 0;
+	if(obj.touchStatus!==0) obj.touchStatus = 0;
 }
 
 var touchmove = function(e, ins) {
-	if(!currentReadyRefresh) return;
+	const obj = getObj(ins);
+	
+	if(!obj.currentReadyRefresh) return;
 	var refreshContianer = ins.selectComponent('#refresh-container');
-	if (refreshStatus === 1 || refreshStatus === 2) {
+	if (obj.refreshStatus === 1 || obj.refreshStatus === 2) {
 		var moveY = e.touches[0].pageY;
-		var diffY = (moveY - startY) * 0.5;
+		var diffY = (moveY - obj.startY) * 0.5;
 		if (diffY < 0) {
 			diffY = 0;
 		} else {
-			if (readyRefresh === false) {
+			if (obj.readyRefresh === false) {
 				ins.callMethod('setReadyRefresh', {
 					readyRefresh: true
 				});
 			}
-			if (refreshShow === false) {
+			if (obj.refreshShow === false) {
 				ins.callMethod('setRefreshShow', {
 					refreshShow: true
 				});
@@ -49,32 +48,34 @@ var touchmove = function(e, ins) {
 			})
 		}
 
-		if (diffY >= refreshDistance) {
-			if (refreshStatus !== 2) ins.callMethod('setRefreshStatus', 2);
+		if (diffY >= obj.refreshDistance) {
+			if (obj.refreshStatus !== 2) ins.callMethod('setRefreshStatus', 2);
 		} else {
-			if (refreshStatus !== 1) {
+			if (obj.refreshStatus !== 1) {
 				ins.callMethod('setRefreshStatus', 1);
 			}
 		}
 	}
-	if(touchStatus!==1) touchStatus = 1;
+	if(obj.touchStatus!==1) obj.touchStatus = 1;
 }
 
 var touchend = function(e, ins) {
-	if(!currentReadyRefresh) return;
+	const obj = getObj(ins);
+	
+	if(!obj.currentReadyRefresh) return;
 	var refreshContianer = ins.selectComponent('#refresh-container');
-	if (refreshStatus === 1 || refreshStatus === 2) {
+	if (obj.refreshStatus === 1 || obj.refreshStatus === 2) {
 		ins.callMethod('setReadyRefresh', {
 			readyRefresh: false
 		});
-		if (refreshStatus === 2) {
+		if (obj.refreshStatus === 2) {
 			ins.callMethod('setRefreshStatus', 3);
 			refreshContianer.setStyle({
-				'transform': 'translateY(' + refreshDistance + 'px)',
+				'transform': 'translateY(' + obj.refreshDistance + 'px)',
 				'transition': '.3s'
 			})
 		} else {
-			if(touchStatus === 1) {
+			if(obj.touchStatus === 1) {
 				refreshContianer.setStyle({
 					'transform': 'translateY(0)',
 					'transition': '.3s'
@@ -85,11 +86,13 @@ var touchend = function(e, ins) {
 			}
 		}
 	}
-	if(touchStatus!==2) touchStatus = 2;
+	if(obj.touchStatus!==2) obj.touchStatus = 2;
 }
 
 var refreshStatusChange = function(n, o, ins) {
-	refreshStatus = n;
+	const obj = getObj(ins);
+	
+	obj.refreshStatus = n;
 	if (n === 4 || n === 5) {
 		var refreshContianer = ins.selectComponent('#refresh-container');
 		refreshContianer.setStyle({
@@ -100,20 +103,41 @@ var refreshStatusChange = function(n, o, ins) {
 	}
 }
 
-var refreshShowChange = function (n) {
-	refreshShow = n
+var refreshShowChange = function (n, o, ins) {
+	const obj = getObj(ins);
+	obj.refreshShow = n
 }
 
-var readyRefreshChange = function (n) {
-	readyRefresh = n
+var readyRefreshChange = function (n, o, ins) {
+	const obj = getObj(ins);
+	obj.readyRefresh = n
 }
 
-var refreshDistanceChange = function (n) {
-	refreshDistance = n
+var refreshDistanceChange = function (n, o, ins) {
+	const obj = getObj(ins);
+	obj.refreshDistance = n
 }
 
-var curReadyRefreshChange = function (n) {
-	currentReadyRefresh = n;
+var curReadyRefreshChange = function (n, o, ins) {
+	const obj = getObj(ins);
+	obj.currentReadyRefresh = n;
+}
+
+function getObj(ins) {
+	var swiper = ins.selectComponent('#swiper');
+	var dataset = swiper.getDataset();
+	var componentId = dataset.componentid;
+	if(!tabsInfosObj[componentId]) tabsInfosObj[componentId] = {
+		startY: 0,
+		touchStatus: 0,
+		refreshStatus: 1,
+		refreshShow: false,
+		readyRefresh: false,
+		refreshDistance: 90,
+		currentReadyRefresh: true
+	}
+	
+	return tabsInfosObj[componentId];
 }
 
 module.exports = {

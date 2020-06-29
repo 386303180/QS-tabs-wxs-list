@@ -16,7 +16,7 @@ function transition(e, ins) {
 	log('current:' + current);
 	var componentId = dataset.componentid;
 	var tabsInfo = tabsInfos[componentId];
-	var tab = tabsInfo[current];
+	var tab = tabsInfo[current] || null;
 	tab = str2Obj(tab, ',');
 	if(tab) {
 		log('tab:' + JSON.stringify(tab));
