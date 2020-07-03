@@ -1,7 +1,7 @@
 var tabsInfosObj = {};
 
 var touchstart = function(e, ins) {
-	const obj = getObj(ins);
+	var obj = getObj(ins);
 	
 	if(!obj.currentReadyRefresh) return;
 	
@@ -16,7 +16,7 @@ var touchstart = function(e, ins) {
 }
 
 var touchmove = function(e, ins) {
-	const obj = getObj(ins);
+	var obj = getObj(ins);
 	
 	if(!obj.currentReadyRefresh) return;
 	var refreshContianer = ins.selectComponent('#refresh-container');
@@ -60,7 +60,7 @@ var touchmove = function(e, ins) {
 }
 
 var touchend = function(e, ins) {
-	const obj = getObj(ins);
+	var obj = getObj(ins);
 	
 	if(!obj.currentReadyRefresh) return;
 	var refreshContianer = ins.selectComponent('#refresh-container');
@@ -90,7 +90,7 @@ var touchend = function(e, ins) {
 }
 
 var refreshStatusChange = function(n, o, ins) {
-	const obj = getObj(ins);
+	var obj = getObj(ins);
 	
 	obj.refreshStatus = n;
 	if (n === 4 || n === 5) {
@@ -104,22 +104,22 @@ var refreshStatusChange = function(n, o, ins) {
 }
 
 var refreshShowChange = function (n, o, ins) {
-	const obj = getObj(ins);
+	var obj = getObj(ins);
 	obj.refreshShow = n
 }
 
 var readyRefreshChange = function (n, o, ins) {
-	const obj = getObj(ins);
+	var obj = getObj(ins);
 	obj.readyRefresh = n
 }
 
 var refreshDistanceChange = function (n, o, ins) {
-	const obj = getObj(ins);
+	var obj = getObj(ins);
 	obj.refreshDistance = n
 }
 
 var curReadyRefreshChange = function (n, o, ins) {
-	const obj = getObj(ins);
+	var obj = getObj(ins);
 	obj.currentReadyRefresh = n;
 }
 
